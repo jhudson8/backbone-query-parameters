@@ -43,8 +43,12 @@ You can create a route string from a route + parameter hash using the router.toF
 		a:'l', b:{c: 'n', d:'m', e:{f: 'o'}}, array1:['p'], array2:['q', 'r'], array3:['s','t','|']
 	});
 
-Parameter-based URI decoding
-----------------------------
-Current backbone will decode the complete hash value. This requires route parameters to be encoded multiple times if they contain reserved characters ('/' for example).
+Regular Expression Routes
+-------------------------
+If you want to use this plugin with regex routes you'll need to append the query capture component (`([\?]{1}.*)?`) manually.
 
-*This patch moves all decoding to route parameters when they are in parameter form (after the hash has been parsed).*
+    router.route(/foo\/([^\/]+)\//, 'foo:event', callback)
+
+should be written
+
+    router.route(/foo\/([^\/]+)\/([\?]{1}.*)?/, 'foo:event', callback)
