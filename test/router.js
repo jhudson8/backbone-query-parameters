@@ -351,7 +351,6 @@ $(document).ready(function() {
     var fragment = router.toFragment('search/nyc/p10', {
       a:'l', b:{c: 'n', d:'m', e:{f: 'o'}}, array1:['p'], array2:['q', 'r'], array3:['s','t','|']
     });
-    console.log(fragment);
     window.location.hash = fragment;
     setTimeout(function() {
       equal(router.query, 'nyc');

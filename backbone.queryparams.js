@@ -8,6 +8,7 @@ var queryStrip = /(\?.*)$/;
 
 var _getFragment = Backbone.History.prototype.getFragment;
 
+Backbone.Router.arrayValueSplit = '|';
 _.extend(Backbone.History.prototype, {
   getFragment : function(fragment, forcePushState, excludeQueryString) {
     fragment = _getFragment.apply(this, arguments);
@@ -112,8 +113,8 @@ _.extend(Backbone.Router.prototype, {
    */
   _decodeParamValue : function(value, currentValue) {
     // '|' will indicate an array.  Array with 1 value is a=|b - multiple values can be a=b|c
-    if (value.indexOf('|') >= 0) {
-      var values = value.split('|');
+    if (value.indexOf(Backbone.Router.arrayValueSplit) >= 0) {
+      var values = value.split(Backbone.Router.arrayValueSplit);
       // clean it up
       for (var i=values.length-1; i>=0; i--) {
         if (!values[i]) {
@@ -151,6 +152,8 @@ _.extend(Backbone.Router.prototype, {
    * Serialize the val hash to query parameters and return it.  Use the namePrefix to prefix all param names (for recursion)
    */
   _toQueryString: function(val, namePrefix) {
+  	function encodeSplit(val) { return val.replace(Backbone.Router.arrayValueSplit, encodeURIComponent(Backbone.Router.arrayValueSplit)); }
+  
     if (!val) return '';
     namePrefix = namePrefix || '';
     var rtn = '';
@@ -160,15 +163,15 @@ _.extend(Backbone.Router.prototype, {
         // primitave type
         _val = this._toQueryParam(_val);
         if (_.isBoolean(_val) || _val) {
-          rtn += (rtn ? '&' : '') + this._toQueryParamName(name, namePrefix) + '=' + encodeURIComponent(_val).replace('|', '%7C');
+          rtn += (rtn ? '&' : '') + this._toQueryParamName(name, namePrefix) + '=' + encodeSplit(encodeURIComponent(_val));
         }
       } else if (_.isArray(_val)) {
-        // arrrays use | separator
+        // arrrays use Backbone.Router.arrayValueSplit separator
         var str = '';
         for (var i in _val) {
           var param = this._toQueryParam(_val[i]);
           if (_.isBoolean(param) || param) {
-            str += '|' + encodeURIComponent(param).replace('|', '%7C');
+            str += Backbone.Router.arrayValueSplit + encodeSplit(param);
           }
         }
         if (str) {
