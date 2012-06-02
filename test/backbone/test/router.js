@@ -59,11 +59,9 @@ $(document).ready(function() {
       this.count++;
     },
 
-    search : function(query, page, queryParams) {
+    search : function(query, page) {
       this.query = query;
       this.page = page;
-      this.queryParams = queryParams;
-      this.fragment = Backbone.history.getFragment(null, false, true);
     },
 
     contacts: function(){
@@ -88,15 +86,13 @@ $(document).ready(function() {
       this.rest = rest;
     },
 
-    query : function(entity, args, queryParams) {
+    query : function(entity, args) {
       this.entity    = entity;
       this.queryArgs = args;
-      this.queryParams = queryParams;
     },
 
-    anything : function(whatever, queryParams) {
+    anything : function(whatever) {
       this.anything = whatever;
-      this.queryParams = queryParams;
     }
 
   });
@@ -280,97 +276,6 @@ $(document).ready(function() {
           start();
         }, 50);
     }, 50);
-  });
-
-
-
-  /** QUERY PARAMS TEST **/
-
-  asyncTest("Router: routes (two part - encoded reserved char)", 2, function() {
-    window.location.hash = 'search/nyc/pa%2Fb';
-    setTimeout(function() {
-      equal(router.query, 'nyc');
-      equal(router.page, 'a/b');
-      start();
-    }, 10);
-  });
-
-  asyncTest("Router: routes (two part - query params)", 4, function() {
-    window.location.hash = 'search/nyc/p10?a=b';
-    setTimeout(function() {
-      equal(router.query, 'nyc');
-      equal(router.page, '10');
-      equal(router.fragment, 'search/nyc/p10');
-      equal(router.queryParams.a, 'b');
-      start();
-    }, 10);
-  });
-
-  asyncTest("Router: routes (two part - query params - hash and list - location)", 23, function() {
-    window.location.hash = 'search/nyc/p10?a=b&a2=x&a2=y&a3=x&a3=y&a3=z&b.c=d&b.d=e&b.e.f=g&array1=|a&array2=a|b&array3=|c|d&array4=|e%7C';
-    setTimeout(function() {
-      equal(router.query, 'nyc');
-      equal(router.page, '10');
-      equal(router.queryParams.a, 'b');
-      equal(router.queryParams.a2.length, 2);
-      equal(router.queryParams.a2[0], 'x');
-      equal(router.queryParams.a2[1], 'y');
-      equal(router.queryParams.a3.length, 3);
-      equal(router.queryParams.a3[0], 'x');
-      equal(router.queryParams.a3[1], 'y');
-      equal(router.queryParams.a3[2], 'z');
-      equal(router.queryParams.b.c, 'd');
-      equal(router.queryParams.b.d, 'e');
-      equal(router.queryParams.b.e.f, 'g');
-      equal(router.queryParams.array1.length, 1);
-      equal(router.queryParams.array1[0], 'a');
-      equal(router.queryParams.array2.length, 2);
-      equal(router.queryParams.array2[0], 'a');
-      equal(router.queryParams.array2[1], 'b');
-      equal(router.queryParams.array3.length, 2);
-      equal(router.queryParams.array3[0], 'c');
-      equal(router.queryParams.array3[1], 'd');
-      equal(router.queryParams.array4.length, 1);
-      equal(router.queryParams.array4[0], 'e|');
-      start();
-    }, 10);
-  });
-
-  asyncTest("Router: routes (two part - query params)", 4, function() {
-    window.location.hash = 'search/nyc/p10?a=b';
-    setTimeout(function() {
-      equal(router.query, 'nyc');
-      equal(router.page, '10');
-      equal(router.fragment, 'search/nyc/p10');
-      equal(router.queryParams.a, 'b');
-      start();
-    }, 10);
-  });
-
-  asyncTest("Router: routes (two part - query params - hash and list - navigate)", 15, function() {
-    var fragment = router.toFragment('search/nyc/p10', {
-      a:'l', b:{c: 'n', d:'m', e:{f: 'o'}}, array1:['p'], array2:['q', 'r'], array3:['s','t','|']
-    });
-    console.log(fragment);
-    window.location.hash = fragment;
-    setTimeout(function() {
-      equal(router.query, 'nyc');
-      equal(router.page, '10');
-      equal(router.queryParams.a, 'l');
-      equal(router.queryParams.b.c, 'n');
-      equal(router.queryParams.b.d, 'm');
-      equal(router.queryParams.b.e.f, 'o');
-      equal(router.queryParams.array1.length, 1);
-      equal(router.queryParams.array1[0], 'p');
-      equal(router.queryParams.array2.length, 2);
-      equal(router.queryParams.array2[0], 'q');
-      equal(router.queryParams.array2[1], 'r');
-      equal(router.queryParams.array3.length, 3);
-      equal(router.queryParams.array3[0], 's');
-      equal(router.queryParams.array3[1], 't');
-      equal(router.queryParams.array3[2], '|');
-      start();
-    }, 10);
   });
 
 });

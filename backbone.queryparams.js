@@ -4,32 +4,52 @@ var queryStringParam = /^\?(.*)/;
 var namedParam    = /:([\w\d]+)/g;
 var splatParam    = /\*([\w\d]+)/g;
 var escapeRegExp  = /[-[\]{}()+?.,\\^$|#\s]/g;
+var queryStrip = /(\?.*)$/;
 
-_.extend(Backbone.Router.prototype, {
+var _getFragment = Backbone.History.prototype.getFragment;
+
+_.extend(Backbone.History.prototype, {
   getFragment : function(fragment, forcePushState, excludeQueryString) {
-    if (fragment == null) {
-      if (this._hasPushState || forcePushState) {
-        fragment = window.location.pathname;
-        var search = window.location.search;
-        if (search) fragment += search;
-      } else {
-        fragment = window.location.hash;
-      }
-    }
-    fragment = fragment.replace(hashStrip, '');
+    fragment = _getFragment.apply(this, arguments);
     if (excludeQueryString) {
       fragment = fragment.replace(queryStrip, '');
     }
-    if (!fragment.indexOf(this.options.root)) fragment = fragment.substr(this.options.root.length);
+    return fragment;
+  }
+});
+
+_.extend(Backbone.Router.prototype, {
+  getFragment : function(fragment, forcePushState, excludeQueryString) {
+    fragment = _getFragment.apply(this, arguments);
+    if (excludeQueryString) {
+      fragment = fragment.replace(queryStrip, '');
+    }
     return fragment;
   },
   
   _routeToRegExp : function(route) {
-    route = route.replace(escapeRegExp, "\\$&")
-                 .replace(namedParam, "([^\/?]*)")
-                 .replace(splatParam, "([^\?]*)");
-    route += '([\?]{1}.*)?';
-    return new RegExp('^' + route + '$');
+    route = route.replace(escapeRegExp, "\\$&");
+    var match = route.match(namedParam, "([^\/?]*)");
+    var paramCount = 0;
+    var isWildCard = false;
+
+    if (match) {
+      route = route.replace(namedParam, "([^\/?]*)");
+      paramCount = match.length;
+    }
+    match = route.match(splatParam);
+    if (match) {
+	    route = route.replace(splatParam, "([^\?]*)");
+	    isWildcard = true;
+    } else {
+      // query parameters should not be used with wildcard
+	    route += '([\?]{1}.*)?';
+    }
+    
+    var rtn = new RegExp('^' + route + '$');
+    rtn.paramCount = paramCount;
+    rtn.isWildCard = isWildCard;
+    return rtn;
   },
 
   /**
@@ -58,7 +78,7 @@ _.extend(Backbone.Router.prototype, {
     }
 
     // decode params
-    for (var i=0; i<params.length; i++) {
+    for (var i=0; i<route.paramCount; i++) {
       if (_.isString(params[i])) {
         params[i] = decodeURIComponent(params[i]);
       }
