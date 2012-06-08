@@ -136,8 +136,9 @@ _.extend(Backbone.Router.prototype, {
    */
   _decodeParamValue : function(value, currentValue) {
     // '|' will indicate an array.  Array with 1 value is a=|b - multiple values can be a=b|c
-    if (value.indexOf(Backbone.Router.arrayValueSplit) >= 0) {
-      var values = value.split(Backbone.Router.arrayValueSplit);
+    var splitChar = Backbone.Router.arrayValueSplit;
+    if (value.indexOf(splitChar) >= 0) {
+      var values = value.split(splitChar);
       // clean it up
       for (var i=values.length-1; i>=0; i--) {
         if (!values[i]) {
@@ -175,7 +176,8 @@ _.extend(Backbone.Router.prototype, {
    * Serialize the val hash to query parameters and return it.  Use the namePrefix to prefix all param names (for recursion)
    */
   _toQueryString: function(val, namePrefix) {
-    function encodeSplit(val) { return val.replace(Backbone.Router.arrayValueSplit, encodeURIComponent(Backbone.Router.arrayValueSplit)); }
+    var splitChar = Backbone.Router.arrayValueSplit;
+    function encodeSplit(val) { return val.replace(splitChar, encodeURIComponent(splitChar)); }
   
     if (!val) return '';
     namePrefix = namePrefix || '';
@@ -194,7 +196,7 @@ _.extend(Backbone.Router.prototype, {
         for (var i in _val) {
           var param = this._toQueryParam(_val[i]);
           if (_.isBoolean(param) || param) {
-            str += Backbone.Router.arrayValueSplit + encodeSplit(param);
+            str += splitChar + encodeSplit(param);
           }
         }
         if (str) {
@@ -237,7 +239,6 @@ _.extend(Backbone.Router.prototype, {
 
 function iterateQueryString(queryString, callback) {
   var keyValues = queryString.split('&');
-  var self = this;
   _.each(keyValues, function(keyValue) {
     var arr = keyValue.split('=');
     if (arr.length > 1 && arr[1]) {
