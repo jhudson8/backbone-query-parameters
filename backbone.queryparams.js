@@ -56,25 +56,18 @@ _.extend(Backbone.Router.prototype, {
   },
   
   _routeToRegExp : function(route) {
-    route = route.replace(escapeRegExp, "\\$&");
-    var match = route.match(namedParam, "([^\/?]*)");
-    var paramCount = 0;
-    var isWildCard = false;
+    var paramCount = (namedParam.exec(route) || {length: 0}).length,
+        isWildCard = splatParam.test(route);
 
-    if (match) {
-      route = route.replace(namedParam, "([^\/?]*)");
-      paramCount = match.length;
-    }
-    match = route.match(splatParam);
-    if (match) {
-      route = route.replace(splatParam, "([^\?]*)");
-      isWildcard = true;
-    } else {
-      // query parameters should not be used with wildcard
+    route = route.replace(escapeRegExp, "\\$&")
+                 .replace(namedParam, "([^\/?]*)")
+                 .replace(splatParam, "([^\?]*)");
+    if (!isWildCard) {
       route += '([\?]{1}.*)?';
     }
-    
+
     var rtn = new RegExp('^' + route + '$');
+    // use the paramCount and wildcard flag to know which parameters should be decoded
     rtn.paramCount = paramCount;
     rtn.isWildCard = isWildCard;
     return rtn;
