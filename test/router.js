@@ -13,7 +13,7 @@ $(document).ready(function() {
 
     setup: function() {
       Backbone.history = null;
-      router = new Router({testing: 101});
+      router = new Router({testing: 101, encodedSplatParts: true});
       Backbone.history.interval = 9;
       Backbone.history.start({pushState: false});
       lastRoute = null;
@@ -47,6 +47,7 @@ $(document).ready(function() {
     },
 
     initialize : function(options) {
+      Backbone.Router.prototype.initialize.apply(this, arguments);
       this.testing = options.testing;
       this.route('implicit', 'implicit');
     },

@@ -47,6 +47,10 @@ _.extend(Backbone.History.prototype, {
 });
 
 _.extend(Backbone.Router.prototype, {
+  initialize: function(options) {
+    this.encodedSplatParts = options && options.encodedSplatParts;
+  },
+  
   getFragment : function(fragment, forcePushState, excludeQueryString) {
     fragment = _getFragment.apply(this, arguments);
     if (excludeQueryString) {
@@ -56,20 +60,29 @@ _.extend(Backbone.Router.prototype, {
   },
   
   _routeToRegExp : function(route) {
-    var paramCount = (namedParam.exec(route) || {length: 0}).length,
-        isWildCard = splatParam.test(route);
+    var splatMatch = (splatParam.exec(route) || {index: -1});
+    var namedMatch = (namedParam.exec(route) || {index: -1});
 
     route = route.replace(escapeRegExp, "\\$&")
                  .replace(namedParam, "([^\/?]*)")
                  .replace(splatParam, "([^\?]*)");
-    if (!isWildCard) {
+    if (splatMatch.index < 0) {
       route += '([\?]{1}.*)?';
     }
 
     var rtn = new RegExp('^' + route + '$');
-    // use the paramCount and wildcard flag to know which parameters should be decoded
-    rtn.paramCount = paramCount;
-    rtn.isWildCard = isWildCard;
+
+    // use the rtn value to hold some parameter data
+    if (splatMatch.index >= 0) {
+      // there is a splat
+      if (namedMatch >= 0) {
+        // negative value will indicate there is a splat match before any named matches
+        rtn.splatMatch = splatMatch.index - namedMatch.index;
+      } else {
+        rtn.splatMatch = -1;
+      }
+    }
+
     return rtn;
   },
 
@@ -95,7 +108,17 @@ _.extend(Backbone.Router.prototype, {
     }
 
     // decode params
-    for (var i=0; i<route.paramCount; i++) {
+    var length = params.length;
+    if (route.splatMatch && this.encodedSplatParts) {
+      if (route.splatMatch < 0) {
+        // splat param is first
+        return params;
+      } else {
+        length = length - 1;
+      }
+    }
+
+    for (var i=0; i<length; i++) {
       if (_.isString(params[i])) {
         params[i] = decodeURIComponent(params[i]);
       }
