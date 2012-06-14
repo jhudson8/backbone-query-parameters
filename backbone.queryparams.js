@@ -28,7 +28,7 @@ _.extend(Backbone.History.prototype, {
     var match = queryString.match(queryStringParam);
     if (match) {
       queryString = match[1];
-      var rtn = {}
+      var rtn = {};
       iterateQueryString(queryString, function(name, value) {
         if (!rtn[name]) {
           rtn[name] = value;
@@ -66,9 +66,7 @@ _.extend(Backbone.Router.prototype, {
     route = route.replace(escapeRegExp, "\\$&")
                  .replace(namedParam, "([^\/?]*)")
                  .replace(splatParam, "([^\?]*)");
-    if (splatMatch.index < 0) {
-      route += '([\?]{1}.*)?';
-    }
+    route += '([\?]{1}.*)?';
 
     var rtn = new RegExp('^' + route + '$');
 
@@ -160,7 +158,7 @@ _.extend(Backbone.Router.prototype, {
         if (!values[i]) {
           values.splice(i, 1);
         } else {
-          values[i] = decodeURIComponent(values[i])
+          values[i] = decodeURIComponent(values[i]);
         }
       }
       return values;
