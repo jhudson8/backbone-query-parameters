@@ -50,7 +50,7 @@ _.extend(Backbone.Router.prototype, {
   initialize: function(options) {
     this.encodedSplatParts = options && options.encodedSplatParts;
   },
-  
+
   getFragment : function(fragment, forcePushState, excludeQueryString) {
     fragment = _getFragment.apply(this, arguments);
     if (excludeQueryString) {
@@ -58,7 +58,7 @@ _.extend(Backbone.Router.prototype, {
     }
     return fragment;
   },
-  
+
   _routeToRegExp : function(route) {
     var splatMatch = (splatParam.exec(route) || {index: -1});
     var namedMatch = (namedParam.exec(route) || {index: -1});
@@ -181,7 +181,9 @@ _.extend(Backbone.Router.prototype, {
       if (!_.isString(queryParameters)) {
         queryParameters = this._toQueryString(queryParameters);
       }
-      route += '?' + queryParameters;
+      if(queryParameters) {
+        route += '?' + queryParameters;
+      }
     }
     return route;
   },
@@ -192,7 +194,7 @@ _.extend(Backbone.Router.prototype, {
   _toQueryString: function(val, namePrefix) {
     var splitChar = Backbone.Router.arrayValueSplit;
     function encodeSplit(val) { return val.replace(splitChar, encodeURIComponent(splitChar)); }
-  
+
     if (!val) return '';
     namePrefix = namePrefix || '';
     var rtn = '';
