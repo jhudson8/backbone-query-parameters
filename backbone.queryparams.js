@@ -201,13 +201,13 @@ _.extend(Backbone.Router.prototype, {
     for (var name in val) {
       var _val = val[name];
       if (_.isString(_val) || _.isNumber(_val) || _.isBoolean(_val) || _.isDate(_val)) {
-        // primitave type
+        // primitive type
         _val = this._toQueryParam(_val);
-        if (_.isBoolean(_val) || _val) {
+        if (_.isBoolean(_val) || _.isNumber(_val) || _val) {
           rtn += (rtn ? '&' : '') + this._toQueryParamName(name, namePrefix) + '=' + encodeSplit(encodeURIComponent(_val));
         }
       } else if (_.isArray(_val)) {
-        // arrrays use Backbone.Router.arrayValueSplit separator
+        // arrays use Backbone.Router.arrayValueSplit separator
         var str = '';
         for (var i in _val) {
           var param = this._toQueryParam(_val[i]);
