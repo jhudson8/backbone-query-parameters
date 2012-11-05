@@ -1,4 +1,4 @@
-(function() {
+(function(_, Backbone) {
 
 var queryStringParam = /^\?(.*)/;
 var namedParam    = /:([\w\d]+)/g;
@@ -263,4 +263,4 @@ function iterateQueryString(queryString, callback) {
   });
 }
 
-})();
+})(_, Backbone);
