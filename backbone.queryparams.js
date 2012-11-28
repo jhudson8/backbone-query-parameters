@@ -258,7 +258,7 @@ function iterateQueryString(queryString, callback) {
   _.each(keyValues, function(keyValue) {
     var i = keyValue.indexOf('=');
     var arr = [keyValue.slice(0,i), keyValue.slice(i+1)];
-    if (arr.length > 1 && arr[1]) {
+    if (arr.length > 1) {
       callback(arr[0], arr[1]);
     }
   });
