@@ -307,6 +307,32 @@ $(document).ready(function() {
     }, 10);
   });
 
+  asyncTest("Router: routes (decoding with 2 repeated values)", 5, function() {
+    window.location.hash = 'search/nyc/p10?f.foo.bar=foo%20%2B%20bar&f.foo.bar=hello%20qux';
+    setTimeout(function() {
+      equal(router.query, 'nyc');
+      equal(router.page, '10');
+      equal(router.fragment, 'search/nyc/p10');
+      equal(router.queryParams.f.foo.bar[0], 'foo + bar');
+      equal(router.queryParams.f.foo.bar[1], 'hello qux');
+      start();
+    }, 10);
+  });
+
+  asyncTest("Router: routes (decoding with 3 repeated values)", 6, function() {
+    window.location.hash = 'search/nyc/p10?f.foo.bar=foo%20%2B%20bar&f.foo.bar=hello%20qux&f.foo.bar=baz%20baz';
+    setTimeout(function() {
+      equal(router.query, 'nyc');
+      equal(router.page, '10');
+      equal(router.fragment, 'search/nyc/p10');
+      equal(router.queryParams.f.foo.bar[0], 'foo + bar');
+      equal(router.queryParams.f.foo.bar[1], 'hello qux');
+      equal(router.queryParams.f.foo.bar[2], 'baz baz');
+      start();
+    }, 10);
+  });
+
+
   asyncTest("Router: routes (two part - query params - hash and list - location)", 23, function() {
     window.location.hash = 'search/nyc/p10?a=b&a2=x&a2=y&a3=x&a3=y&a3=z&b.c=d&b.d=e&b.e.f=g&array1=|a&array2=a|b&array3=|c|d&array4=|e%7C';
     setTimeout(function() {
