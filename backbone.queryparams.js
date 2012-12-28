@@ -71,7 +71,6 @@ _.extend(Backbone.Router.prototype, {
                    })
                    .replace(splatParam, '([^\?]*?)');
       route += '([\?]{1}.*)?';
-      console.log(route);
       var rtn = new RegExp('^' + route + '$');
 
     // use the rtn value to hold some parameter data
