@@ -1,6 +1,6 @@
 Installation
 --------------
-Copy backbone.queryparams.js to your environment and include *after* backbone.js.
+Copy backbone.queryparams.js to your environment and include *after* backbone.js.  This has been updated to support backbone 0.9.9.
 
 Query string route syntax
 -------------------------

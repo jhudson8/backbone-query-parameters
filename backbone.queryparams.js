@@ -1,9 +1,10 @@
 (function(_, Backbone) {
 
 var queryStringParam = /^\?(.*)/;
-var namedParam    = /:([\w\d]+)/g;
-var splatParam    = /\*([\w\d]+)/g;
-var escapeRegExp  = /[-[\]{}()+?.,\\^$|#\s]/g;
+var optionalParam = /\((.*?)\)/g;
+var namedParam    = /(\(\?)?:\w+/g;
+var splatParam    = /\*\w+/g;
+var escapeRegExp  = /[\-{}\[\]+?.,\\\^$|#\s]/g;
 var queryStrip = /(\?.*)$/;
 var fragmentStrip = /^([^\?]*)/;
 Backbone.Router.arrayValueSplit = '|';
@@ -59,16 +60,19 @@ _.extend(Backbone.Router.prototype, {
     return fragment;
   },
 
-  _routeToRegExp : function(route) {
-    var splatMatch = (splatParam.exec(route) || {index: -1});
-    var namedMatch = (namedParam.exec(route) || {index: -1});
+    _routeToRegExp: function(route) {
+      var splatMatch = (splatParam.exec(route) || {index: -1}),
+          namedMatch = (namedParam.exec(route) || {index: -1});
 
-    route = route.replace(escapeRegExp, "\\$&")
-                 .replace(namedParam, "([^\/?]*)")
-                 .replace(splatParam, "([^\?]*)");
-    route += '([\?]{1}.*)?';
-
-    var rtn = new RegExp('^' + route + '$');
+      route = route.replace(escapeRegExp, '\\$&')
+                   .replace(optionalParam, '(?:$1)?')
+                   .replace(namedParam, function(match, optional){
+                     return optional ? match : '([^\\/\\?]+)';
+                   })
+                   .replace(splatParam, '([^\?]*?)');
+      route += '([\?]{1}.*)?';
+      console.log(route);
+      var rtn = new RegExp('^' + route + '$');
 
     // use the rtn value to hold some parameter data
     if (splatMatch.index >= 0) {
@@ -82,7 +86,7 @@ _.extend(Backbone.Router.prototype, {
     }
 
     return rtn;
-  },
+    },
 
   /**
    * Given a route, and a URL fragment that it matches, return the array of
@@ -118,7 +122,7 @@ _.extend(Backbone.Router.prototype, {
 
     for (var i=0; i<length; i++) {
       if (_.isString(params[i])) {
-        params[i] = decodeURIComponent(params[i]);
+        params[i] = Backbone.Router.decodeParams ? decodeURIComponent(params[i]) : params[i];
       }
     }
 
@@ -166,10 +170,10 @@ _.extend(Backbone.Router.prototype, {
     if (!currentValue) {
       return decodeURIComponent(value);
     } else if (_.isArray(currentValue)) {
-      currentValue.push(value);
+      currentValue.push(decodeURIComponent(value));
       return currentValue;
     } else {
-      return [currentValue, value];
+      return [currentValue, decodeURIComponent(value)];
     }
   },
 
