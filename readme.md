@@ -21,6 +21,17 @@ Example route patterns
 * #foo/abc -> myRoute( 'abc', undefined )
 * #foo/abc?foo=bar -> myRoute( 'abc', {'foo': 'bar'} )
 
+Named route parameters
+----------------------
+All query parameters can be passed in a single hash using the key referenced from the route definition by setting ```Backbone.Router.namedParameters = true```.
+
+Using the previous example route patterns, the controller function would be
+```
+myRoute( {bar: 'abc', foo: 'bar'} );
+```
+Although this is not compatible with backbone, it is very useful to prevent router function parameter overloading where you have to always consider
+whether the route query parameters were passed.
+
 Nested query strings
 -----------------------
 * Any keys containing '.' will represent a nested structure.

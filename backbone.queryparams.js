@@ -1,12 +1,13 @@
 (function(_, Backbone) {
 
-var queryStringParam = /^\?(.*)/;
-var optionalParam = /\((.*?)\)/g;
-var namedParam    = /(\(\?)?:\w+/g;
-var splatParam    = /\*\w+/g;
-var escapeRegExp  = /[\-{}\[\]+?.,\\\^$|#\s]/g;
-var queryStrip = /(\?.*)$/;
-var fragmentStrip = /^([^\?]*)/;
+var queryStringParam = /^\?(.*)/,
+    optionalParam = /\((.*?)\)/g,
+    namedParam    = /(\(\?)?:\w+/g,
+    splatParam    = /\*\w+/g,
+    escapeRegExp  = /[\-{}\[\]+?.,\\\^$|#\s]/g,
+    queryStrip = /(\?.*)$/,
+    fragmentStrip = /^([^\?]*)/,
+    namesPattern = /[\:\*]([^\:\?\/]+)/g;
 Backbone.Router.arrayValueSplit = '|';
 
 var _getFragment = Backbone.History.prototype.getFragment;
@@ -60,39 +61,42 @@ _.extend(Backbone.Router.prototype, {
     return fragment;
   },
 
-    _routeToRegExp: function(route) {
-      var splatMatch = (splatParam.exec(route) || {index: -1}),
-          namedMatch = (namedParam.exec(route) || {index: -1});
+  _routeToRegExp: function(route) {
+    var splatMatch = (splatParam.exec(route) || {index: -1}),
+        namedMatch = (namedParam.exec(route) || {index: -1}),
+        paramNames = route.match(namesPattern) || [];
 
-      route = route.replace(escapeRegExp, '\\$&')
-                   .replace(optionalParam, '(?:$1)?')
-                   .replace(namedParam, function(match, optional){
-                     return optional ? match : '([^\\/\\?]+)';
-                   })
-                   .replace(splatParam, '([^\?]*?)');
-      route += '([\?]{1}.*)?';
-      var rtn = new RegExp('^' + route + '$');
+    route = route.replace(escapeRegExp, '\\$&')
+                 .replace(optionalParam, '(?:$1)?')
+                 .replace(namedParam, function(match, optional){
+                   return optional ? match : '([^\\/\\?]+)';
+                 })
+                 .replace(splatParam, '([^\?]*?)');
+    route += '([\?]{1}.*)?';
+    var rtn = new RegExp('^' + route + '$');
 
-    // use the rtn value to hold some parameter data
-    if (splatMatch.index >= 0) {
-      // there is a splat
-      if (namedMatch >= 0) {
-        // negative value will indicate there is a splat match before any named matches
-        rtn.splatMatch = splatMatch.index - namedMatch.index;
-      } else {
-        rtn.splatMatch = -1;
-      }
+  // use the rtn value to hold some parameter data
+  if (splatMatch.index >= 0) {
+    // there is a splat
+    if (namedMatch >= 0) {
+      // negative value will indicate there is a splat match before any named matches
+      rtn.splatMatch = splatMatch.index - namedMatch.index;
+    } else {
+      rtn.splatMatch = -1;
     }
+  }
+  rtn.paramNames = paramNames.map(function(name) { return name.substring(1); });
 
-    return rtn;
-    },
+  return rtn;
+  },
 
   /**
    * Given a route, and a URL fragment that it matches, return the array of
    * extracted parameters.
    */
   _extractParameters : function(route, fragment) {
-    var params = route.exec(fragment).slice(1);
+    var params = route.exec(fragment).slice(1),
+        namedParams = {};
 
     // do we have an additional query string?
     var match = params.length && params[params.length-1] && params[params.length-1].match(queryStringParam);
@@ -106,6 +110,7 @@ _.extend(Backbone.Router.prototype, {
         });
       }
       params[params.length-1] = data;
+      _.extend(namedParams, data);
     }
 
     // decode params
@@ -122,10 +127,13 @@ _.extend(Backbone.Router.prototype, {
     for (var i=0; i<length; i++) {
       if (_.isString(params[i])) {
         params[i] = Backbone.Router.decodeParams ? decodeURIComponent(params[i]) : params[i];
+        if (route.paramNames.length >= i-1) {
+          namedParams[route.paramNames[i]] = params[i];
+        }
       }
     }
 
-    return params;
+    return Backbone.Router.namedParameters ? [namedParams] : params;
   },
 
   /**

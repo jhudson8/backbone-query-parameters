@@ -650,4 +650,17 @@ $(document).ready(function() {
     equal(router.queryParams.f.foo.bar[1], 'hello qux');
     equal(router.queryParams.f.foo.bar[2], 'baz baz');
   });
+
+  test("named parameters", 3, function() {
+    Backbone.Router.namedParameters = true;
+    var route = 'search/nyc/p10?a=b';
+    Backbone.history.navigate(route, {trigger: true});
+    Backbone.history.checkUrl();
+    // only 1 param in this case populated with query parameters and route vars keyd with their associated name
+    var data = router.query;
+    equal(data.query, 'nyc');
+    equal(data.page, '10');
+    equal(data.a, 'b');
+    Backbone.Router.namedParameters = false;
+  });
 });
