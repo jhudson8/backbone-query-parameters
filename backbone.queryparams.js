@@ -1,5 +1,13 @@
 (function(_, Backbone) {
 
+// Require Underscore and Backbone if there's a `require` function.
+// This makes `backbone.queryparam` work on the server or when using
+// `browserify`.
+if (typeof require !== 'undefined') {
+  _ = require('underscore');
+  Backbone = require('backbone');
+}
+
 var queryStringParam = /^\?(.*)/,
     optionalParam = /\((.*?)\)/g,
     namedParam    = /(\(\?)?:\w+/g,
