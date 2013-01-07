@@ -4,8 +4,8 @@
 // This makes `backbone.queryparam` work on the server or when using
 // `browserify`.
 if (typeof require !== 'undefined') {
-  _ = require('underscore');
-  Backbone = require('backbone');
+  _ = _ || require('underscore');
+  Backbone = Backbone || require('backbone');
 }
 
 var queryStringParam = /^\?(.*)/,
