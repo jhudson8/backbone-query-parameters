@@ -93,7 +93,7 @@ _.extend(Backbone.Router.prototype, {
       rtn.splatMatch = -1;
     }
   }
-  rtn.paramNames = paramNames.map(function(name) { return name.substring(1); });
+  rtn.paramNames = _.map(paramNames, function(name) { return name.substring(1); });
 
   return rtn;
   },
