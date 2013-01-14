@@ -265,9 +265,6 @@ _.extend(Backbone.Router.prototype, {
     if (_.isNull(param) || _.isUndefined(param)) {
       return null;
     }
-    if (_.isDate(param)) {
-      return param.getDate().getTime();
-    }
     return param;
   }
 });
