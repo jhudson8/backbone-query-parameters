@@ -283,4 +283,4 @@ function iterateQueryString(queryString, callback) {
   });
 }
 
-})(_, Backbone);
+})(typeof _ === 'undefined' ? null : _, typeof Backbone === 'undefined' ? null : Backbone);
