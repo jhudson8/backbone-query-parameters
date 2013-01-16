@@ -15,6 +15,7 @@ var queryStringParam = /^\?(.*)/,
     escapeRegExp  = /[\-{}\[\]+?.,\\\^$|#\s]/g,
     queryStrip = /(\?.*)$/,
     fragmentStrip = /^([^\?]*)/,
+    hasQueryString = /(\?)[\w-]+=/i,
     namesPattern = /[\:\*]([^\:\?\/]+)/g;
 Backbone.Router.arrayValueSplit = '|';
 
@@ -25,6 +26,8 @@ _.extend(Backbone.History.prototype, {
     fragment = _getFragment.apply(this, arguments);
     if (excludeQueryString) {
       fragment = fragment.replace(queryStrip, '');
+    } else if (! hasQueryString.test(fragment)) {
+      fragment += this.location.search;
     }
     return fragment;
   },
