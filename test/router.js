@@ -651,7 +651,7 @@ $(document).ready(function() {
     equal(router.queryParams.f.foo.bar[2], 'baz baz');
   });
 
-  test("named parameters", 3, function() {
+  test("named parameters (defined statically)", 3, function() {
     Backbone.Router.namedParameters = true;
     var route = 'search/nyc/p10?a=b';
     Backbone.history.navigate(route, {trigger: true});
@@ -662,5 +662,28 @@ $(document).ready(function() {
     equal(data.page, '10');
     equal(data.a, 'b');
     Backbone.Router.namedParameters = false;
+  });
+
+  test("named parameters (defined on router instance)", 3, function() {
+    var Router = Backbone.Router.extend({
+      namedParameters: true,
+      routes: {
+        "search2/:query/p:page":       "search",
+      },
+      search : function(query, page, queryParams) {
+        this.query = query;
+        this.page = page;
+        this.queryParams = queryParams;
+      },
+    });
+    var router = new Router();
+    var route = 'search2/nyc/p10?a=b';
+    Backbone.history.navigate(route, {trigger: true});
+    Backbone.history.checkUrl();
+    // only 1 param in this case populated with query parameters and route vars keyd with their associated name
+    var data = router.query;
+    equal(data.query, 'nyc');
+    equal(data.page, '10');
+    equal(data.a, 'b');
   });
 });

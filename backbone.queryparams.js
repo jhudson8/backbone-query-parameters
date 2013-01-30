@@ -94,6 +94,7 @@ _.extend(Backbone.Router.prototype, {
     }
   }
   rtn.paramNames = _.map(paramNames, function(name) { return name.substring(1); });
+  rtn.namedParameters = this.namedParameters;
 
   return rtn;
   },
@@ -141,7 +142,7 @@ _.extend(Backbone.Router.prototype, {
       }
     }
 
-    return Backbone.Router.namedParameters ? [namedParams] : params;
+    return (Backbone.Router.namedParameters || route.namedParameters) ? [namedParams] : params;
   },
 
   /**
