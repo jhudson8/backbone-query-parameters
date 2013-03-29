@@ -135,6 +135,10 @@ _.extend(Backbone.Router.prototype, {
         length = length - 1;
       }
     }
+    
+    if (!_.isString(params[0])) {
+        params.unshift('');
+    }
 
     for (var i=0; i<length; i++) {
       if (_.isString(params[i])) {
