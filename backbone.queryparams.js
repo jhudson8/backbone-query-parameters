@@ -232,7 +232,7 @@ _.extend(Backbone.Router.prototype, {
       } else if (_.isArray(_val)) {
         // arrays use Backbone.Router.arrayValueSplit separator
         var str = '';
-        for (var i in _val) {
+        for (var i = 0; i < _val.length; i++) {
           var param = this._toQueryParam(_val[i]);
           if (_.isBoolean(param) || param) {
             str += splitChar + encodeSplit(param);
