@@ -16,10 +16,25 @@ var queryStringParam = /^\?(.*)/,
     queryStrip = /(\?.*)$/,
     fragmentStrip = /^([^\?]*)/,
     hasQueryString = /(\?)[\w-]+=/i,
-    namesPattern = /[\:\*]([^\:\?\/]+)/g;
+    namesPattern = /[\:\*]([^\:\?\/]+)/g,
+    routeStripper = /^[#\/]|\s+$/g,
+    trailingSlash = /\/$/;
 Backbone.Router.arrayValueSplit = '|';
 
-var _getFragment = Backbone.History.prototype.getFragment;
+var _getFragment = function(fragment, forcePushState) {
+  if (fragment == null) {
+    if (this._hasPushState || !this._wantsHashChange || forcePushState) {
+      fragment = window.location.pathname;
+      var root = this.root.replace(trailingSlash, '');
+      var search = window.location.search;
+      if (!fragment.indexOf(root)) fragment = fragment.substr(root.length);
+      if (search) fragment += search;
+    } else {
+      fragment = this.getHash();
+    }
+  }
+  return fragment.replace(routeStripper, '');
+}
 
 _.extend(Backbone.History.prototype, {
   getFragment : function(fragment, forcePushState, excludeQueryString) {
@@ -134,6 +149,10 @@ _.extend(Backbone.Router.prototype, {
       } else {
         length = length - 1;
       }
+    }
+    
+    if (!_.isString(params[0])) {
+        params.unshift('');
     }
 
     for (var i=0; i<length; i++) {
