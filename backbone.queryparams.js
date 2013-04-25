@@ -37,12 +37,14 @@ var _getFragment = function(fragment, forcePushState) {
 }
 
 _.extend(Backbone.History.prototype, {
-  getFragment : function(fragment, forcePushState, excludeQueryString) {
+  getFragment : function(fragment, forcePushState) {
+    excludeQueryString = (this._wantsHashChange && this._wantsPushState && 
+      !this._hasPushState);
     fragment = _getFragment.apply(this, arguments);
-    if (excludeQueryString) {
-      fragment = fragment.replace(queryStrip, '');
-    } else if (! hasQueryString.test(fragment)) {
+    if (!hasQueryString.test(fragment)) {
       fragment += this.location.search;
+    } else if (excludeQueryString) {
+      fragment = fragment.replace(queryStrip, '');
     }
     return fragment;
   },
