@@ -38,15 +38,15 @@ var _getFragment = function(fragment, forcePushState) {
 
 _.extend(Backbone.History.prototype, {
   getFragment : function(fragment, forcePushState) {
-    excludeQueryString = (this._wantsHashChange && this._wantsPushState && 
+    var excludeQueryString = (this._wantsHashChange && this._wantsPushState &&
       !this._hasPushState);
-    fragment = _getFragment.apply(this, arguments);
-    if (!hasQueryString.test(fragment)) {
-      fragment += this.location.search;
+    var _fragment = _getFragment.apply(this, arguments);
+    if(fragment == null && !hasQueryString.test(fragment)) {
+      _fragment += this.location.search;
     } else if (excludeQueryString) {
-      fragment = fragment.replace(queryStrip, '');
+      _fragment = _fragment.replace(queryStrip, '');
     }
-    return fragment;
+    return _fragment;
   },
 
   // this will not perform custom query param serialization specific to the router
@@ -152,7 +152,7 @@ _.extend(Backbone.Router.prototype, {
         length = length - 1;
       }
     }
-    
+
     if (!_.isString(params[0])) {
         params.unshift('');
     }
