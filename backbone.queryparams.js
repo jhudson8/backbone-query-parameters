@@ -41,7 +41,7 @@ _.extend(Backbone.History.prototype, {
     var excludeQueryString = (this._wantsHashChange && this._wantsPushState &&
       !this._hasPushState);
     var _fragment = _getFragment.apply(this, arguments);
-    if(fragment == null && !hasQueryString.test(fragment)) {
+    if(fragment == null && !hasQueryString.test(_fragment)) {
       _fragment += this.location.search;
     } else if (excludeQueryString) {
       _fragment = _fragment.replace(queryStrip, '');
