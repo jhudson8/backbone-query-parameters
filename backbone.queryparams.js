@@ -153,10 +153,6 @@ _.extend(Backbone.Router.prototype, {
       }
     }
 
-    if (!_.isString(params[0])) {
-        params.unshift('');
-    }
-
     for (var i=0; i<length; i++) {
       if (_.isString(params[i])) {
         params[i] = Backbone.Router.decodeParams ? decodeURIComponent(params[i]) : params[i];
