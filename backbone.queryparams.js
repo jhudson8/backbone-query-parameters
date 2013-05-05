@@ -24,9 +24,9 @@ Backbone.Router.arrayValueSplit = '|';
 var _getFragment = function(fragment, forcePushState) {
   if (fragment == null) {
     if (this._hasPushState || !this._wantsHashChange || forcePushState) {
-      fragment = window.location.pathname;
+      fragment = this.location.pathname;
       var root = this.root.replace(trailingSlash, '');
-      var search = window.location.search;
+      var search = this.location.search;
       if (!fragment.indexOf(root)) fragment = fragment.substr(root.length);
       if (search) fragment += search;
     } else {
