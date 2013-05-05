@@ -16,20 +16,37 @@ var queryStringParam = /^\?(.*)/,
     queryStrip = /(\?.*)$/,
     fragmentStrip = /^([^\?]*)/,
     hasQueryString = /(\?)[\w-]+=/i,
-    namesPattern = /[\:\*]([^\:\?\/]+)/g;
+    namesPattern = /[\:\*]([^\:\?\/]+)/g,
+    routeStripper = /^[#\/]|\s+$/g,
+    trailingSlash = /\/$/;
 Backbone.Router.arrayValueSplit = '|';
 
-var _getFragment = Backbone.History.prototype.getFragment;
+var _getFragment = function(fragment, forcePushState) {
+  if (fragment == null) {
+    if (this._hasPushState || !this._wantsHashChange || forcePushState) {
+      fragment = this.location.pathname;
+      var root = this.root.replace(trailingSlash, '');
+      var search = this.location.search;
+      if (!fragment.indexOf(root)) fragment = fragment.substr(root.length);
+      if (search) fragment += search;
+    } else {
+      fragment = this.getHash();
+    }
+  }
+  return fragment.replace(routeStripper, '');
+}
 
 _.extend(Backbone.History.prototype, {
-  getFragment : function(fragment, forcePushState, excludeQueryString) {
-    fragment = _getFragment.apply(this, arguments);
-    if (excludeQueryString) {
-      fragment = fragment.replace(queryStrip, '');
-    } else if (! hasQueryString.test(fragment)) {
-      fragment += this.location.search;
+  getFragment : function(fragment, forcePushState) {
+    var excludeQueryString = (this._wantsHashChange && this._wantsPushState &&
+      !this._hasPushState);
+    var _fragment = _getFragment.apply(this, arguments);
+    if(fragment == null && !hasQueryString.test(_fragment)) {
+      _fragment += this.location.search;
+    } else if (excludeQueryString) {
+      _fragment = _fragment.replace(queryStrip, '');
     }
-    return fragment;
+    return _fragment;
   },
 
   // this will not perform custom query param serialization specific to the router
