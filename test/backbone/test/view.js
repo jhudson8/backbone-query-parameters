@@ -14,35 +14,16 @@ $(document).ready(function() {
 
   });
 
-  test("constructor", 6, function() {
+  test("constructor", 3, function() {
     equal(view.el.id, 'test-view');
     equal(view.el.className, 'test-view');
     equal(view.el.other, void 0);
-    equal(view.options.id, 'test-view');
-    equal(view.options.className, 'test-view');
-    equal(view.options.other, 'non-special-option');
   });
 
   test("jQuery", 1, function() {
     var view = new Backbone.View;
     view.setElement('<p><a><b>test</b></a></p>');
     strictEqual(view.$('a b').html(), 'test');
-  });
-
-  test("make", 3, function() {
-    var div = view.make('div', {id: 'test-div'}, "one two three");
-
-    equal(div.tagName.toLowerCase(), 'div');
-    equal(div.id, 'test-div');
-    equal($(div).text(), 'one two three');
-  });
-
-  test("make can take falsy values for content", 2, function() {
-    var div = view.make('div', {id: 'test-div'}, 0);
-    equal($(div).text(), '0');
-
-    div = view.make('div', {id: 'test-div'}, '');
-    equal($(div).text(), '');
   });
 
   test("initialize", 1, function() {
@@ -99,6 +80,13 @@ $(document).ready(function() {
     view.delegateEvents(events);
     view.$el.trigger('click');
     equal(view.counter, 3);
+  });
+
+
+  test("delegateEvents ignore undefined methods", 0, function() {
+    var view = new Backbone.View({el: '<p></p>'});
+    view.delegateEvents({'click': 'undefinedMethod'});
+    view.$el.trigger('click');
   });
 
   test("undelegateEvents", 6, function() {
@@ -163,30 +151,6 @@ $(document).ready(function() {
 
     strictEqual(new View().el.className, 'className');
     strictEqual(new View().el.id, 'id');
-  });
-
-  test("with options function", 3, function() {
-    var View1 = Backbone.View.extend({
-      options: function() {
-        return {
-          title: 'title1',
-          acceptText: 'confirm'
-        };
-      }
-    });
-
-    var View2 = View1.extend({
-      options: function() {
-        return _.extend(View1.prototype.options.call(this), {
-          title: 'title2',
-          fixed: true
-        });
-      }
-    });
-
-    strictEqual(new View2().options.title, 'title2');
-    strictEqual(new View2().options.acceptText, 'confirm');
-    strictEqual(new View2().options.fixed, true);
   });
 
   test("with attributes", 2, function() {

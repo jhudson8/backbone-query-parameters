@@ -126,6 +126,10 @@ _.extend(Backbone.Router.prototype, {
   _extractParameters : function(route, fragment) {
     var params = route.exec(fragment).slice(1),
         namedParams = {};
+    if (params.length > 0 && _.isUndefined(params[params.length - 1])) {
+    	// remove potential invalid data from query params match
+    	params.splice(params.length - 1, 1);
+    }
 
     // do we have an additional query string?
     var match = params.length && params[params.length-1] && params[params.length-1].match(queryStringParam);
@@ -155,7 +159,7 @@ _.extend(Backbone.Router.prototype, {
 
     for (var i=0; i<length; i++) {
       if (_.isString(params[i])) {
-        params[i] = Backbone.Router.decodeParams ? decodeURIComponent(params[i]) : params[i];
+        params[i] = decodeURIComponent(params[i]);
         if (route.paramNames.length >= i-1) {
           namedParams[route.paramNames[i]] = params[i];
         }
