@@ -37,7 +37,7 @@ var _getFragment = function(fragment, forcePushState) {
 }
 
 _.extend(Backbone.History.prototype, {
-  getFragment : function(fragment, forcePushState) {
+  getFragment: function(fragment, forcePushState) {
     var excludeQueryString = (this._wantsHashChange && this._wantsPushState &&
       !this._hasPushState);
     var _fragment = _getFragment.apply(this, arguments);
@@ -51,7 +51,7 @@ _.extend(Backbone.History.prototype, {
 
   // this will not perform custom query param serialization specific to the router
   // but will return a map of key/value pairs (the value is a string or array)
-  getQueryParameters : function(fragment, forcePushState) {
+  getQueryParameters: function(fragment, forcePushState) {
     fragment = _getFragment.apply(this, arguments);
     // if no query string exists, this will still be the original fragment
     var queryString = fragment.replace(fragmentStrip, '');
@@ -81,7 +81,7 @@ _.extend(Backbone.Router.prototype, {
     this.encodedSplatParts = options && options.encodedSplatParts;
   },
 
-  getFragment : function(fragment, forcePushState, excludeQueryString) {
+  getFragment: function(fragment, forcePushState, excludeQueryString) {
     fragment = _getFragment.apply(this, arguments);
     if (excludeQueryString) {
       fragment = fragment.replace(queryStrip, '');
@@ -103,27 +103,27 @@ _.extend(Backbone.Router.prototype, {
     route += '([\?]{1}.*)?';
     var rtn = new RegExp('^' + route + '$');
 
-  // use the rtn value to hold some parameter data
-  if (splatMatch.index >= 0) {
-    // there is a splat
-    if (namedMatch >= 0) {
-      // negative value will indicate there is a splat match before any named matches
-      rtn.splatMatch = splatMatch.index - namedMatch.index;
-    } else {
-      rtn.splatMatch = -1;
+    // use the rtn value to hold some parameter data
+    if (splatMatch.index >= 0) {
+      // there is a splat
+      if (namedMatch >= 0) {
+        // negative value will indicate there is a splat match before any named matches
+        rtn.splatMatch = splatMatch.index - namedMatch.index;
+      } else {
+        rtn.splatMatch = -1;
+      }
     }
-  }
-  rtn.paramNames = _.map(paramNames, function(name) { return name.substring(1); });
-  rtn.namedParameters = this.namedParameters;
-
-  return rtn;
+    rtn.paramNames = _.map(paramNames, function(name) { return name.substring(1); });
+    rtn.namedParameters = this.namedParameters;
+  
+    return rtn;
   },
 
   /**
    * Given a route, and a URL fragment that it matches, return the array of
    * extracted parameters.
    */
-  _extractParameters : function(route, fragment) {
+  _extractParameters: function(route, fragment) {
     var params = route.exec(fragment).slice(1),
         namedParams = {};
     if (params.length > 0 && _.isUndefined(params[params.length - 1])) {
@@ -172,7 +172,7 @@ _.extend(Backbone.Router.prototype, {
   /**
    * Set the parameter value on the data hash
    */
-  _setParamValue : function(key, value, data) {
+  _setParamValue: function(key, value, data) {
     // use '.' to define hash separators
     var parts = key.split('.');
     var _data = data;
@@ -192,7 +192,7 @@ _.extend(Backbone.Router.prototype, {
    * @param value the complete value
    * @param currentValue the currently known value (or list of values)
    */
-  _decodeParamValue : function(value, currentValue) {
+  _decodeParamValue: function(value, currentValue) {
     // '|' will indicate an array.  Array with 1 value is a=|b - multiple values can be a=b|c
     var splitChar = Backbone.Router.arrayValueSplit;
     if (value.indexOf(splitChar) >= 0) {
