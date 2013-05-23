@@ -237,7 +237,7 @@ _.extend(Backbone.Router.prototype, {
    */
   _toQueryString: function(val, namePrefix) {
     var splitChar = Backbone.Router.arrayValueSplit;
-    function encodeSplit(val) { return val.replace(splitChar, encodeURIComponent(splitChar)); }
+    function encodeSplit(val) { return String(val).replace(splitChar, encodeURIComponent(splitChar)); }
 
     if (!val) return '';
     namePrefix = namePrefix || '';
