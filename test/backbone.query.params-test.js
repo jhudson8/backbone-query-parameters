@@ -200,9 +200,9 @@ $(document).ready(function() {
     equal(router.queryParams.a, 'b');
   });
 
-  test("routes (two part - query params - hash and list - navigate)", 15, function() {
+  test("routes (two part - query params - hash and list - navigate)", 19, function() {
     var route = router.toFragment('search/nyc/p10', {
-      a:'l', b:{c: 'n', d:'m', e:{f: 'o'}}, array1:['p'], array2:['q', 'r'], array3:['s','t','|']
+      a:'l', b:{c: 'n', d:'m', e:{f: 'o'}}, array1:['p'], array2:['q', 'r'], array3:['s','t','|'], array4:[5, 6, 8, 9]
     });
     Backbone.history.navigate(route, {trigger: true});
     Backbone.history.checkUrl();
@@ -221,6 +221,13 @@ $(document).ready(function() {
     equal(router.queryParams.array3[0], 's');
     equal(router.queryParams.array3[1], 't');
     equal(router.queryParams.array3[2], '|');
+    equal(router.queryParams.array4[0], 5);
+    equal(router.queryParams.array4[1], 6);
+    equal(router.queryParams.array4[2], 8);
+    equal(router.queryParams.array4[3], 9);
+
+
+
   });
 
   test("routes (decoding with 2 repeated values)", 4, function() {
