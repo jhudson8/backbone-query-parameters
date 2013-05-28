@@ -195,6 +195,7 @@ _.extend(Backbone.Router.prototype, {
   _decodeParamValue: function(value, currentValue) {
     // '|' will indicate an array.  Array with 1 value is a=|b - multiple values can be a=b|c
     var splitChar = Backbone.Router.arrayValueSplit;
+    value = decodeURIComponent((value+'').replace(/\+/g, '%20'));
     if (value.indexOf(splitChar) >= 0) {
       var values = value.split(splitChar);
       // clean it up
