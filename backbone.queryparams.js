@@ -160,7 +160,7 @@ _.extend(Backbone.Router.prototype, {
     for (var i=0; i<length; i++) {
       if (_.isString(params[i])) {
         params[i] = decodeURIComponent(params[i]);
-        if (route.paramNames.length >= i-1) {
+        if (route.paramNames && route.paramNames.length >= i-1) {
           namedParams[route.paramNames[i]] = params[i];
         }
       }
