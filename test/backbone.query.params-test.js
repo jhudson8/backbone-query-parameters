@@ -286,4 +286,9 @@ $(document).ready(function() {
     equal(data.page, '10');
     equal(data.a, 'b');
   });
+
+  test("getQueryParameters", 1, function() {
+    var router = new Backbone.Router();
+    deepEqual(Backbone.history.getQueryParameters('?cmpid'), {});
+  });
 });
