@@ -286,4 +286,11 @@ $(document).ready(function() {
     equal(data.page, '10');
     equal(data.a, 'b');
   });
+
+  test("url parameters decoded", 2, function(){
+    var route = 'search/nyc/p10?foo=bar%20%3A%20baz&qux=foo',
+      params = Backbone.history.getQueryParameters(route);
+    equal(params.foo, 'bar : baz');
+    equal(params.qux, 'foo');
+  })
 });
