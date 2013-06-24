@@ -287,6 +287,11 @@ $(document).ready(function() {
     equal(data.a, 'b');
   });
 
+  test("getQueryParameters", 1, function() {
+    var router = new Backbone.Router();
+    deepEqual(Backbone.history.getQueryParameters('?cmpid'), {});
+  });
+
   test("url parameters decoded", 2, function(){
     var route = 'search/nyc/p10?foo=bar%20%3A%20baz&qux=foo',
       params = Backbone.history.getQueryParameters(route);

@@ -299,8 +299,7 @@ _.extend(Backbone.Router.prototype, {
 function iterateQueryString(queryString, callback) {
   var keyValues = queryString.split('&');
   _.each(keyValues, function(keyValue) {
-    var i = keyValue.indexOf('=');
-    var arr = [keyValue.slice(0,i), keyValue.slice(i+1)];
+    var arr = keyValue.split('=');
     if (arr.length > 1) {
       callback(arr[0], arr[1]);
     }
