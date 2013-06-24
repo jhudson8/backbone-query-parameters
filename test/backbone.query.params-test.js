@@ -162,33 +162,22 @@ $(document).ready(function() {
     equal(router.queryParams.a, 'b');
   });
 
-  test("routes (two part - query params - hash and list - location)", 23, function() {
+  test("routes (two part - query params - hash and list - location)", 12, function() {
     var route = 'search/nyc/p10?a=b&a2=x&a2=y&a3=x&a3=y&a3=z&b.c=d&b.d=e&b.e.f=g&array1=|a&array2=a|b&array3=|c|d&array4=|e%7C';
     Backbone.history.navigate(route, {trigger: true});
     Backbone.history.checkUrl();
     equal(router.query, 'nyc');
     equal(router.page, '10');
     equal(router.queryParams.a, 'b');
-    equal(router.queryParams.a2.length, 2);
-    equal(router.queryParams.a2[0], 'x');
-    equal(router.queryParams.a2[1], 'y');
-    equal(router.queryParams.a3.length, 3);
-    equal(router.queryParams.a3[0], 'x');
-    equal(router.queryParams.a3[1], 'y');
-    equal(router.queryParams.a3[2], 'z');
+    deepEqual(router.queryParams.a2, ['x', 'y']);
+    deepEqual(router.queryParams.a3, ['x', 'y', 'z']);
     equal(router.queryParams.b.c, 'd');
     equal(router.queryParams.b.d, 'e');
     equal(router.queryParams.b.e.f, 'g');
-    equal(router.queryParams.array1.length, 1);
-    equal(router.queryParams.array1[0], 'a');
-    equal(router.queryParams.array2.length, 2);
-    equal(router.queryParams.array2[0], 'a');
-    equal(router.queryParams.array2[1], 'b');
-    equal(router.queryParams.array3.length, 2);
-    equal(router.queryParams.array3[0], 'c');
-    equal(router.queryParams.array3[1], 'd');
-    equal(router.queryParams.array4.length, 1);
-    equal(router.queryParams.array4[0], 'e|');
+    deepEqual(router.queryParams.array1, ['a']);
+    deepEqual(router.queryParams.array2, ['a', 'b']);
+    deepEqual(router.queryParams.array3, ['c', 'd']);
+    deepEqual(router.queryParams.array4, ['e|']);
   });
 
   test("routes (two part - query params)", 3, function() {
@@ -200,7 +189,7 @@ $(document).ready(function() {
     equal(router.queryParams.a, 'b');
   });
 
-  test("routes (two part - query params - hash and list - navigate)", 19, function() {
+  test("routes (two part - query params - hash and list - navigate)", 10, function() {
     var route = router.toFragment('search/nyc/p10', {
       a:'l', b:{c: 'n', d:'m', e:{f: 'o'}}, array1:['p'], array2:['q', 'r'], array3:['s','t','|'], array4:[5, 6, 8, 9]
     });
@@ -212,43 +201,28 @@ $(document).ready(function() {
     equal(router.queryParams.b.c, 'n');
     equal(router.queryParams.b.d, 'm');
     equal(router.queryParams.b.e.f, 'o');
-    equal(router.queryParams.array1.length, 1);
-    equal(router.queryParams.array1[0], 'p');
-    equal(router.queryParams.array2.length, 2);
-    equal(router.queryParams.array2[0], 'q');
-    equal(router.queryParams.array2[1], 'r');
-    equal(router.queryParams.array3.length, 3);
-    equal(router.queryParams.array3[0], 's');
-    equal(router.queryParams.array3[1], 't');
-    equal(router.queryParams.array3[2], '|');
-    equal(router.queryParams.array4[0], 5);
-    equal(router.queryParams.array4[1], 6);
-    equal(router.queryParams.array4[2], 8);
-    equal(router.queryParams.array4[3], 9);
-
-
-
+    deepEqual(router.queryParams.array1, ['p']);
+    deepEqual(router.queryParams.array2, ['q', 'r']);
+    deepEqual(router.queryParams.array3, ['s','t','|']);
+    deepEqual(router.queryParams.array4, ['5', '6', '8', '9']);
   });
 
-  test("routes (decoding with 2 repeated values)", 4, function() {
+  test("routes (decoding with 2 repeated values)", 3, function() {
     var route = 'search/nyc/p10?f.foo.bar=foo%20%2B%20bar&f.foo.bar=hello%20qux';
     Backbone.history.navigate(route, {trigger: true});
     Backbone.history.checkUrl();
     equal(router.query, 'nyc');
     equal(router.page, '10');
-    equal(router.queryParams.f.foo.bar[0], 'foo + bar');
-    equal(router.queryParams.f.foo.bar[1], 'hello qux');
+    deepEqual(router.queryParams.f.foo.bar, ['foo + bar', 'hello qux']);
   });
 
-  test("routes (decoding with 3 repeated values)", 5, function() {
+  test("routes (decoding with 3 repeated values)", 3, function() {
     var route = 'search/nyc/p10?f.foo.bar=foo%20%2B%20bar&f.foo.bar=hello%20qux&f.foo.bar=baz%20baz';
     Backbone.history.navigate(route, {trigger: true});
     Backbone.history.checkUrl();
     equal(router.query, 'nyc');
     equal(router.page, '10');
-    equal(router.queryParams.f.foo.bar[0], 'foo + bar');
-    equal(router.queryParams.f.foo.bar[1], 'hello qux');
-    equal(router.queryParams.f.foo.bar[2], 'baz baz');
+    deepEqual(router.queryParams.f.foo.bar, ['foo + bar', 'hello qux', 'baz baz']);
   });
 
   test("named parameters (defined statically)", 3, function() {
@@ -268,13 +242,13 @@ $(document).ready(function() {
     var Router = Backbone.Router.extend({
       namedParameters: true,
       routes: {
-        "search2/:query/p:page":       "search",
+        "search2/:query/p:page":       "search"
       },
       search : function(query, page, queryParams) {
         this.query = query;
         this.page = page;
         this.queryParams = queryParams;
-      },
+      }
     });
     var router = new Router();
     var route = 'search2/nyc/p10?a=b';
