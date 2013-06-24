@@ -93,6 +93,7 @@ $(document).ready(function() {
     initialize : function(options) {
       this.testing = options.testing;
       this.route('implicit', 'implicit');
+      this.route(/regex\/(\d+)([\?]{1}.*)?/, 'regex');
     },
 
     counter: function() {
@@ -100,6 +101,10 @@ $(document).ready(function() {
     },
 
     implicit: function() {
+      this.count++;
+    },
+
+    regex: function(id) {
       this.count++;
     },
 
@@ -241,6 +246,12 @@ $(document).ready(function() {
       strictEqual(href, new Location('http://example.com#end_here').href);
     };
     Backbone.history.navigate('end_here', {replace: true});
+  });
+
+  test("routes (regex)", 1, function() {
+    router.count = 0;
+    router.navigate('regex/123', {trigger: true});
+    equal(router.count, 1);
   });
 
   test("routes (splats)", 1, function() {
