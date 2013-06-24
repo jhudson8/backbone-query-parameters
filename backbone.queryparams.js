@@ -57,17 +57,7 @@ _.extend(Backbone.History.prototype, {
     var match = queryString.match(queryStringParam);
     if (match) {
       queryString = match[1];
-      var rtn = {};
-      iterateQueryString(queryString, function(name, value) {
-        if (!rtn[name]) {
-          rtn[name] = value;
-        } else if (_.isString(rtn[name])) {
-          rtn[name] = [rtn[name], value];
-        } else {
-          rtn[name].push(value);
-        }
-      });
-      return rtn;
+      return Backbone.Router.queryToObject(queryString);
     } else {
       // no values
       return {};
