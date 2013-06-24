@@ -60,6 +60,7 @@ _.extend(Backbone.History.prototype, {
       queryString = match[1];
       var rtn = {};
       iterateQueryString(queryString, function(name, value) {
+        value = decodeURIComponent(value);
         if (!rtn[name]) {
           rtn[name] = value;
         } else if (_.isString(rtn[name])) {
@@ -115,7 +116,7 @@ _.extend(Backbone.Router.prototype, {
     }
     rtn.paramNames = _.map(paramNames, function(name) { return name.substring(1); });
     rtn.namedParameters = this.namedParameters;
-  
+
     return rtn;
   },
 
