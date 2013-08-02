@@ -1,0 +1,25 @@
+{
+  "name": "backbone-query-parameters",
+  "version": "0.2.2",
+  "description": "Backbone plugin which provides query parameter support for Backbone.Router",
+  "main": "backbone.queryparams.js",
+  "dependencies": {
+    "backbone": ">= 1.0.0",
+    "underscore": ">= 1.5.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/jhudson8/backbone-query-parameters.git"
+  },
+  "homepage": "https://github.com/jhudson8/backbone-query-parameters",
+  "keywords": [
+    "backbone",
+    "router",
+    "backbone.router",
+    "history",
+    "pushstate",
+    "querystring"
+  ],
+  "author": "Joe Hudson",
+  "license": "BSD3"
+}
