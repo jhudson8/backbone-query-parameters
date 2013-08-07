@@ -257,7 +257,7 @@ _.extend(Backbone.Router.prototype, {
         var str = '';
         for (var i = 0; i < _val.length; i++) {
           var param = this._toQueryParam(_val[i]);
-          if (_.isBoolean(param) || param) {
+          if (_.isBoolean(param) || param !== null) {
             str += splitChar + encodeSplit(param);
           }
         }
