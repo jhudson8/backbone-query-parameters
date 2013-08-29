@@ -249,7 +249,7 @@ _.extend(Backbone.Router.prototype, {
       if (_.isString(_val) || _.isNumber(_val) || _.isBoolean(_val) || _.isDate(_val)) {
         // primitive type
         _val = this._toQueryParam(_val);
-        if (_.isBoolean(_val) || _.isNumber(_val) || _val) {
+        if (_.isBoolean(_val) || _.isNumber(_val) || _.isString(_val) || _val) {
           rtn += (rtn ? '&' : '') + this._toQueryParamName(name, namePrefix) + '=' + encodeSplit(encodeURIComponent(_val));
         }
       } else if (_.isArray(_val)) {

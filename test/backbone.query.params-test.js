@@ -200,9 +200,9 @@ $(document).ready(function() {
     equal(router.queryParams.a, 'b');
   });
 
-  test("routes (two part - query params - hash and list - navigate)", 20, function() {
+  test("routes (two part - query params - hash and list - navigate)", 21, function() {
     var route = router.toFragment('search/nyc/p10', {
-      a:'l', b:{c: 'n', d:'m', e:{f: 'o'}}, array1:['p'], array2:['q', 'r'], array3:['s','t','|'], array4:[0, 5, 6, 8, 9]
+      a:'l', b:{c: 'n', d:'m', e:{f: 'o'}}, g:'', array1:['p'], array2:['q', 'r'], array3:['s','t','|'], array4:[0, 5, 6, 8, 9]
     });
     Backbone.history.navigate(route, {trigger: true});
     Backbone.history.checkUrl();
@@ -212,6 +212,7 @@ $(document).ready(function() {
     equal(router.queryParams.b.c, 'n');
     equal(router.queryParams.b.d, 'm');
     equal(router.queryParams.b.e.f, 'o');
+    equal(router.queryParams.g, '');
     equal(router.queryParams.array1.length, 1);
     equal(router.queryParams.array1[0], 'p');
     equal(router.queryParams.array2.length, 2);
