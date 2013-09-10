@@ -100,8 +100,11 @@ _.extend(Backbone.Router.prototype, {
                  .replace(namedParam, function(match, optional){
                    return optional ? match : '([^\\/\\?]+)';
                  })
-                 .replace(splatParam, '([^\?]*?)');
-    route += '([\?]{1}.*)?';
+                 // `[^??]` is hacking around a regular expression bug under iOS4.
+                 // If only `[^?]` is used then paths like signin/photos will fail
+                 // while paths with `?` anywhere, like `signin/photos?`, will succeed.
+                 .replace(splatParam, '([^??]*?)');
+    route += '(\\?.*)?';
     var rtn = new RegExp('^' + route + '$');
 
     // use the rtn value to hold some parameter data

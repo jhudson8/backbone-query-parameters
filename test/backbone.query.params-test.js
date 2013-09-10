@@ -299,4 +299,15 @@ $(document).ready(function() {
     equal(params.foo, 'bar : baz');
     equal(params.qux, 'foo');
   })
+
+  test("complex wildcard", function() {
+    var regex = Backbone.Router.prototype._routeToRegExp('search/*dest'),
+        match = regex.exec('search/foo?bar');
+    equal(match[1], 'foo');
+    equal(match[2], '?bar');
+
+    match = regex.exec('search/foo');
+    equal(match[1], 'foo');
+    equal(match[2], undefined);
+  });
 });
