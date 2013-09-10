@@ -101,8 +101,8 @@ _.extend(Backbone.Router.prototype, {
                    return optional ? match : '([^\\/\\?]+)';
                  })
                  // `[^??]` is hacking around a regular expression bug under iOS4.
-                 // If only `[^?]` is used then paths like signin/photos will fail unless they
-                 // have the while paths like `signin/photos?` will succeed.
+                 // If only `[^?]` is used then paths like signin/photos will fail
+                 // while paths with `?` anywhere, like `signin/photos?`, will succeed.
                  .replace(splatParam, '([^??]*?)');
     route += '(\\?.*)?';
     var rtn = new RegExp('^' + route + '$');
