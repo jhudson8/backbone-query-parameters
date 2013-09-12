@@ -41,7 +41,7 @@ _.extend(Backbone.History.prototype, {
     var excludeQueryString = (this._wantsHashChange && this._wantsPushState &&
       !this._hasPushState);
     var _fragment = _getFragment.apply(this, arguments);
-    if(fragment == null && !hasQueryString.test(_fragment)) {
+    if(fragment == null && _fragment == null && !hasQueryString.test(_fragment)) {
       _fragment += this.location.search;
     } else if (excludeQueryString) {
       _fragment = _fragment.replace(queryStrip, '');
@@ -178,6 +178,7 @@ _.extend(Backbone.Router.prototype, {
    */
   _setParamValue: function(key, value, data) {
     // use '.' to define hash separators
+    key = key.replace('[]', '');
     var parts = key.split('.');
     var _data = data;
     for (var i=0; i<parts.length; i++) {
