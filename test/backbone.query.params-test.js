@@ -253,6 +253,21 @@ $(document).ready(function() {
     equal(router.queryParams.f.foo.bar[2], 'baz baz');
   });
 
+  test("routes (with array[] structure)", 9, function() {
+    var route = 'search/nyc/p10?a=b&b[]=x&b[]=y&b[]=z&c=y&d[]=z';
+    Backbone.history.navigate(route, {trigger: true});
+    Backbone.history.checkUrl();
+    equal(router.query, 'nyc');
+    equal(router.page, '10');
+    equal(router.queryParams.a, 'b');
+    equal(router.queryParams.b.length, 3);
+    equal(router.queryParams.b[0], 'x');
+    equal(router.queryParams.b[1], 'y');
+    equal(router.queryParams.b[2], 'z');
+    equal(router.queryParams.c, 'y');
+    equal(router.queryParams.d, 'z');
+  });
+
   test("named parameters (defined statically)", 3, function() {
     Backbone.Router.namedParameters = true;
     var route = 'search/nyc/p10?a=b';
