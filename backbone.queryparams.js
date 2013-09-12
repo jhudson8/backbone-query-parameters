@@ -1,12 +1,17 @@
-(function(_, Backbone) {
-
-// Require Underscore and Backbone if there's a `require` function.
-// This makes `backbone.queryparam` work on the server or when using
-// `browserify`.
-if (typeof require !== 'undefined') {
-  _ = _ || require('underscore');
-  Backbone = Backbone || require('backbone');
-}
+(function (root, factory) {
+   if (typeof exports === 'object' && root.require) {
+     module.exports = factory(require("underscore"), require("backbone"));
+   } else if (typeof define === "function" && define.amd) {
+      // AMD. Register as an anonymous module.
+      define(["underscore","backbone"], function(_, Backbone) {
+        // Use global variables if the locals are undefined.
+        return factory(_ || root._, Backbone || root.Backbone);
+      });
+   } else {
+      // RequireJS isn't being used. Assume underscore and backbone are loaded in <script> tags
+      factory(_, Backbone);
+   }
+}(this, function(_, Backbone) {
 
 var queryStringParam = /^\?(.*)/,
     optionalParam = /\((.*?)\)/g,
@@ -310,4 +315,4 @@ function iterateQueryString(queryString, callback) {
   });
 }
 
-})(typeof _ === 'undefined' ? null : _, typeof Backbone === 'undefined' ? null : Backbone);
+}));
