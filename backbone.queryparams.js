@@ -310,7 +310,7 @@ function iterateQueryString(queryString, callback) {
   _.each(keyValues, function(keyValue) {
     var arr = keyValue.split('=');
     if (arr.length > 1) {
-      callback(arr[0], arr[1]);
+      callback(arr.shift(), arr.join('='));
     }
   });
 }
