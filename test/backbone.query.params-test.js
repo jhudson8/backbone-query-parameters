@@ -162,8 +162,8 @@ $(document).ready(function() {
     equal(router.queryParams.a, 'b');
   });
 
-  test("routes (two part - query params - hash and list - location)", 23, function() {
-    var route = 'search/nyc/p10?a=b&a2=x&a2=y&a3=x&a3=y&a3=z&b.c=d&b.d=e&b.e.f=g&array1=|a&array2=a|b&array3=|c|d&array4=|e%7C';
+  test("routes (two part - query params - hash and list - location)", 24, function() {
+    var route = 'search/nyc/p10?a=b&a2=x&a2=y&a3=x&a3=y&a3=z&&a4=x=y=z&b.c=d&b.d=e&b.e.f=g&array1=|a&array2=a|b&array3=|c|d&array4=|e%7C';
     Backbone.history.navigate(route, {trigger: true});
     Backbone.history.checkUrl();
     equal(router.query, 'nyc');
@@ -176,6 +176,7 @@ $(document).ready(function() {
     equal(router.queryParams.a3[0], 'x');
     equal(router.queryParams.a3[1], 'y');
     equal(router.queryParams.a3[2], 'z');
+    equal(router.queryParams.a4, 'x=y=z');
     equal(router.queryParams.b.c, 'd');
     equal(router.queryParams.b.d, 'e');
     equal(router.queryParams.b.e.f, 'g');
