@@ -228,9 +228,6 @@ $(document).ready(function() {
     equal(router.queryParams.array4[2], 6);
     equal(router.queryParams.array4[3], 8);
     equal(router.queryParams.array4[4], 9);
-
-
-
   });
 
   test("routes (decoding with 2 repeated values)", 4, function() {
@@ -305,9 +302,10 @@ $(document).ready(function() {
     equal(data.a, 'b');
   });
 
-  test("getQueryParameters", 1, function() {
+  test("getQueryParameters", 2, function() {
     var router = new Backbone.Router();
-    deepEqual(Backbone.history.getQueryParameters('?cmpid'), {});
+    deepEqual(Backbone.history.getQueryParameters('?cmpid'), {cmpid: ""});
+    deepEqual(Backbone.history.getQueryParameters('?cmpid='), {cmpid: ""});
   });
 
   test("url parameters decoded", 2, function(){
