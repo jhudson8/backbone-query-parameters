@@ -20,7 +20,7 @@ var queryStringParam = /^\?(.*)/,
     escapeRegExp  = /[\-{}\[\]+?.,\\\^$|#\s]/g,
     queryStrip = /(\?.*)$/,
     fragmentStrip = /^([^\?]*)/,
-    hasQueryString = /(\?)[\w-]+=/i,
+    hasQueryString = /(\?)[\w-]+/i,
     namesPattern = /[\:\*]([^\:\?\/]+)/g,
     routeStripper = /^[#\/]|\s+$/g,
     trailingSlash = /\/$/;
@@ -314,9 +314,7 @@ function iterateQueryString(queryString, callback) {
   var keyValues = queryString.split('&');
   _.each(keyValues, function(keyValue) {
     var arr = keyValue.split('=');
-    if (arr.length > 1) {
-      callback(arr.shift(), arr.join('='));
-    }
+    callback(arr.shift(), arr.join('='));
   });
 }
 
