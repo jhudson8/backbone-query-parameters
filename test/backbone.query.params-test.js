@@ -292,7 +292,7 @@ $(document).ready(function() {
         this.query = query;
         this.page = page;
         this.queryParams = queryParams;
-      },
+      }
     });
     var router = new Router();
     var route = 'search2/nyc/p10?a=b';
@@ -312,10 +312,30 @@ $(document).ready(function() {
 
   test("url parameters decoded", 2, function(){
     var route = 'search/nyc/p10?foo=bar%20%3A%20baz&qux=foo',
-      params = Backbone.history.getQueryParameters(route);
+        params = Backbone.history.getQueryParameters(route);
     equal(params.foo, 'bar : baz');
     equal(params.qux, 'foo');
-  })
+  });
+
+  test("querystring space decoding", 2, function(){
+    var route = '?search=text+%3D%20%22foo+bar%22',
+        expectedParams = {search: 'text = "foo bar"'};
+
+    deepEqual(Backbone.history.getQueryParameters(route), expectedParams);
+
+    var Router = Backbone.Router.extend({
+      namedParameters: true,
+      routes: {
+        "": "search",
+      },
+      search : function(queryParams) {
+        this.queryParams = queryParams;
+      }
+    });
+    var router = new Router();
+    Backbone.history.navigate(route, {trigger: true});
+    deepEqual(router.queryParams, expectedParams)
+  });
 
   test("complex wildcard", function() {
     var regex = Backbone.Router.prototype._routeToRegExp('search/*dest'),
