@@ -529,7 +529,7 @@ $(document).ready(function() {
     Backbone.history.stop();
     location.replace('http://example.com/root/x/y?a=b');
     location.replace = function(url) {
-      strictEqual(url, '/root/?a=b#x/y');
+      strictEqual(url, '/root/#x/y?a=b');
     };
     Backbone.history = _.extend(new Backbone.History, {
       location: location,
@@ -546,13 +546,33 @@ $(document).ready(function() {
 
   test("#1695 - hashChange to pushState with search.", 1, function() {
     Backbone.history.stop();
-    location.replace('http://example.com/root?a=b#x/y');
+    location.replace('http://example.com/root?a=b#x/y?c=d');
     Backbone.history = _.extend(new Backbone.History, {
       location: location,
       history: {
         pushState: function(){},
         replaceState: function(state, title, url){
-          strictEqual(url, '/root/x/y?a=b');
+          strictEqual(url, '/root/x/y?c=d');
+        }
+      }
+    });
+    Backbone.history.start({
+      root: 'root',
+      pushState: true
+    });
+  });
+
+  test("#1695 - hashChange to pushState without search.", 1, function() {
+    Backbone.history.stop();
+    location.replace('http://example.com/root?a=b#x/y');
+
+
+    Backbone.history = _.extend(new Backbone.History, {
+      location: location,
+      history: {
+        pushState: function(){},
+        replaceState: function(state, title, url){
+          strictEqual(url, '/root/x/y');
         }
       }
     });
