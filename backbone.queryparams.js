@@ -39,20 +39,43 @@ var _getFragment = function(fragment, forcePushState) {
     }
   }
   return fragment.replace(routeStripper, '');
+};
+
+
+function LocationRewriter(history) {
+  var original = history.location;
+
+  history.location = _.extend({}, original, {
+    replace: function() {
+      original.replace(history.root + '#' + history.fragment);
+    },
+
+    unpatch: function() {
+      return history.location = original;
+    }
+  });
 }
 
-_.extend(Backbone.History.prototype, {
-  getFragment: function(fragment, forcePushState) {
-    var excludeQueryString = (this._wantsHashChange && this._wantsPushState &&
-      !this._hasPushState);
-    var _fragment = _getFragment.apply(this, arguments);
-    if(fragment == null && _fragment == null && !hasQueryString.test(_fragment)) {
-      _fragment += this.location.search;
-    } else if (excludeQueryString) {
-      _fragment = _fragment.replace(queryStrip, '');
+function HistoryRewriter(history) {
+  var original = history.history;
+
+  history.history = _.extend({}, original, {
+    replaceState: function(state, title, url) {
+      url = history.root + history.fragment;
+      return original.replaceState(state, title, url);
+    },
+
+    unpatch: function() {
+      return history.history = original;
     }
-    return _fragment;
-  },
+  });
+}
+
+var _start = Backbone.History.prototype.start,
+    _loadUrl = Backbone.History.prototype.loadUrl;
+
+_.extend(Backbone.History.prototype, {
+  getFragment: _getFragment,
 
   // this will not perform custom query param serialization specific to the router
   // but will return a map of key/value pairs (the value is a string or array)
@@ -79,6 +102,30 @@ _.extend(Backbone.History.prototype, {
       // no values
       return {};
     }
+  },
+
+  start: function() {
+    // Patch this.location and this.history to override the behaviour in Backbone.History.start. This is an alternative
+    // to copy/pasting a patched version of Backbone.History.start, along with any closure variables. It's important
+    // that the patching only exists for the duration of Backbone.History.start, so all exit points are covered with
+    // unpatch code.
+    //
+    // The rational is to bring back the behaviour from 0.9.2 with regards to how the hash fragment replaces the entire
+    // path *and* querystring of the URL.
+    LocationRewriter(this);
+    HistoryRewriter(this);
+    try {
+      return _start.apply(this, arguments);
+    } finally {
+      this.location.unpatch && this.location.unpatch();
+      this.history.unpatch && this.history.unpatch();
+    }
+  },
+
+  loadUrl: function () {
+    this.location.unpatch && this.location.unpatch();
+    this.history.unpatch && this.history.unpatch();
+    return _loadUrl.apply(this, arguments);
   }
 });
 
@@ -87,13 +134,7 @@ _.extend(Backbone.Router.prototype, {
     this.encodedSplatParts = options && options.encodedSplatParts;
   },
 
-  getFragment: function(fragment, forcePushState, excludeQueryString) {
-    fragment = _getFragment.apply(this, arguments);
-    if (excludeQueryString) {
-      fragment = fragment.replace(queryStrip, '');
-    }
-    return fragment;
-  },
+  getFragment: _getFragment,
 
   _routeToRegExp: function(route) {
     var splatMatch = (splatParam.exec(route) || {index: -1}),
