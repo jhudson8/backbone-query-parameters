@@ -26,14 +26,19 @@ var queryStringParam = /^\?(.*)/,
     trailingSlash = /\/$/;
 Backbone.Router.arrayValueSplit = '|';
 
-var _getFragment = function(fragment, forcePushState) {
+function _getFragment(fragment, forcePushState) {
+  /*jshint eqnull:true */
   if (fragment == null) {
     if (this._hasPushState || !this._wantsHashChange || forcePushState) {
       fragment = this.location.pathname;
       var root = this.root.replace(trailingSlash, '');
       var search = this.location.search;
-      if (!fragment.indexOf(root)) fragment = fragment.substr(root.length);
-      if (search) fragment += search;
+      if (!fragment.indexOf(root)) {
+        fragment = fragment.substr(root.length);
+      }
+      if (search) {
+        fragment += search;
+      }
     } else {
       fragment = this.getHash();
     }
@@ -43,6 +48,7 @@ var _getFragment = function(fragment, forcePushState) {
 
 _.extend(Backbone.History.prototype, {
   getFragment: function(fragment, forcePushState) {
+    /*jshint eqnull:true */
     var excludeQueryString = (this._wantsHashChange && this._wantsPushState &&
       !this._hasPushState);
     var _fragment = _getFragment.apply(this, arguments);
@@ -138,8 +144,8 @@ _.extend(Backbone.Router.prototype, {
     var params = route.exec(fragment).slice(1),
         namedParams = {};
     if (params.length > 0 && _.isUndefined(params[params.length - 1])) {
-    	// remove potential invalid data from query params match
-    	params.splice(params.length - 1, 1);
+      // remove potential invalid data from query params match
+      params.splice(params.length - 1, 1);
     }
 
     // do we have an additional query string?
