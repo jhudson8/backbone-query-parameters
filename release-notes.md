@@ -2,7 +2,13 @@
 
 ## Development
 
-[Commits](https://github.com/jhudson8/backbone-query-parameters/compare/v0.2.3...master)
+[Commits](https://github.com/jhudson8/backbone-query-parameters/compare/v0.2.4...master)
+
+## v0.2.4 - November 8th, 2013
+
+- Fix bower name reference - 7ef4d42
+
+[Commits](https://github.com/jhudson8/backbone-query-parameters/compare/v0.2.3...v0.2.4)
 
 ## v0.2.3 - November 8th, 2013
 
