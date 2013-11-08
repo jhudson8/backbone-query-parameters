@@ -138,7 +138,7 @@ $(document).ready(function() {
   });
 
   test("Route callback gets passed DECODED values.", 3, function() {
-    var route = 'has%2Fslash/complex-has%23hash/has%20space';
+    var route = 'has%2Fslash/complex-has%23hash/has+space';
     Backbone.history.navigate(route, {trigger: true});
     strictEqual(router.first, 'has/slash');
     strictEqual(router.part, 'has#hash');
@@ -309,7 +309,7 @@ $(document).ready(function() {
   });
 
   test("url parameters decoded", 2, function(){
-    var route = 'search/nyc/p10?foo=bar%20%3A%20baz&qux=foo',
+    var route = 'search/nyc/p10?foo=bar%20%3A+baz&qux=foo',
         params = Backbone.history.getQueryParameters(route);
     equal(params.foo, 'bar : baz');
     equal(params.qux, 'foo');

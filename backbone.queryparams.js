@@ -71,9 +71,8 @@ _.extend(Backbone.History.prototype, {
       queryString = match[1];
       var rtn = {};
       iterateQueryString(queryString, function(name, value) {
-        // decodeURIComponent doesn't touch '+'
-        value = value.replace(/\+/g, '%20');
-        value = decodeURIComponent(value);
+        value = parseParams(value);
+
         if (!rtn[name]) {
           rtn[name] = value;
         } else if (_.isString(rtn[name])) {
@@ -176,7 +175,7 @@ _.extend(Backbone.Router.prototype, {
 
     for (var i=0; i<length; i++) {
       if (_.isString(params[i])) {
-        params[i] = decodeURIComponent(params[i]);
+        params[i] = parseParams(params[i]);
         if (route.paramNames && route.paramNames.length >= i-1) {
           namedParams[route.paramNames[i]] = params[i];
         }
@@ -223,12 +222,13 @@ _.extend(Backbone.Router.prototype, {
         if (!values[i]) {
           values.splice(i, 1);
         } else {
-          values[i] = decodeURIComponent(values[i]);
+          values[i] = parseParams(values[i]);
         }
       }
       return values;
     }
-    value = decodeURIComponent(value);
+
+    value = parseParams(value);
     if (!currentValue) {
       return value;
     } else if (_.isArray(currentValue)) {
@@ -315,6 +315,11 @@ _.extend(Backbone.Router.prototype, {
     return param;
   }
 });
+
+function parseParams(value) {
+  // decodeURIComponent doesn't touch '+'
+  return decodeURIComponent(value.replace(/\+/g, ' '));
+}
 
 function iterateQueryString(queryString, callback) {
   var keyValues = queryString.split('&');
