@@ -1,5 +1,5 @@
 {
-  "name": "backbone-queryparams",
+  "name": "backbone-query-parameters",
   "version": "0.2.3",
   "main": "backbone.queryparams.js",
   "repository": {
