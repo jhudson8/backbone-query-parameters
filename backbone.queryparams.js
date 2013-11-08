@@ -222,13 +222,14 @@ _.extend(Backbone.Router.prototype, {
       return values;
     }
 
+    value = parseParams(value);
     if (!currentValue) {
-      return parseParams(value);
+      return value;
     } else if (_.isArray(currentValue)) {
-      currentValue.push(parseParams(value));
+      currentValue.push(value);
       return currentValue;
     } else {
-      return [currentValue, parseParams(value)];
+      return [currentValue, value];
     }
   },
 
