@@ -191,6 +191,7 @@ _.extend(Backbone.Router.prototype, {
   _setParamValue: function(key, value, data) {
     // use '.' to define hash separators
     key = key.replace('[]', '');
+    key = key.replace('%5B%5D', '');
     var parts = key.split('.');
     var _data = data;
     for (var i=0; i<parts.length; i++) {
