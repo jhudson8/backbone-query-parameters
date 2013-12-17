@@ -315,7 +315,13 @@ _.extend(Backbone.Router.prototype, {
 
 function parseParams(value) {
   // decodeURIComponent doesn't touch '+'
-  return decodeURIComponent(value.replace(/\+/g, ' '));
+  try {
+    return decodeURIComponent(value.replace(/\+/g, ' '));
+  } catch (err) {
+    throw err;
+    // Failover to whatever was passed if we get junk data
+    return value;
+  }
 }
 
 function iterateQueryString(queryString, callback) {
