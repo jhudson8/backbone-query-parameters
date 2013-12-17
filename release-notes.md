@@ -2,7 +2,14 @@
 
 ## Development
 
-[Commits](https://github.com/jhudson8/backbone-query-parameters/compare/v0.2.4...master)
+[Commits](https://github.com/jhudson8/backbone-query-parameters/compare/v0.2.5...master)
+
+## v0.2.5 - December 17th, 2013
+
+- [#72](https://github.com/jhudson8/backbone-query-parameters/pull/72) - Added parsing of key[] URL Encoded for array structure ([@jeremyFreeAgent](https://api.github.com/users/jeremyFreeAgent))
+- [#75](https://github.com/jhudson8/backbone-query-parameters/pull/75) - Failover parameter parsing if junk data is sent ([@kpdecker](https://api.github.com/users/kpdecker))
+
+[Commits](https://github.com/jhudson8/backbone-query-parameters/compare/v0.2.4...v0.2.5)
 
 ## v0.2.4 - November 8th, 2013
 
