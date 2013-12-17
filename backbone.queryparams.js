@@ -318,7 +318,6 @@ function parseParams(value) {
   try {
     return decodeURIComponent(value.replace(/\+/g, ' '));
   } catch (err) {
-    throw err;
     // Failover to whatever was passed if we get junk data
     return value;
   }
