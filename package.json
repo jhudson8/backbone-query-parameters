@@ -1,6 +1,6 @@
 {
   "name": "backbone-query-parameters",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "Backbone plugin which provides query parameter support for Backbone.Router",
   "main": "backbone.queryparams.js",
   "dependencies": {
