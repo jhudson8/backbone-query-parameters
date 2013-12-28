@@ -28,7 +28,9 @@ $(document).ready(function() {
       ));
       // In IE, anchor.pathname does not contain a leading slash though
       // window.location.pathname does.
-      if (!/^\//.test(this.pathname)) this.pathname = '/' + this.pathname;
+      if (!/^\//.test(this.pathname)) {
+        this.pathname = '/' + this.pathname;
+      }
     },
 
     toString: function() {
@@ -41,7 +43,7 @@ $(document).ready(function() {
 
     setup: function() {
       location = new Location('http://example.com');
-      Backbone.history = _.extend(new Backbone.History, {location: location});
+      Backbone.history = _.extend(new Backbone.History(), {location: location});
       router = new Router({testing: 101});
       Backbone.history.interval = 9;
       Backbone.history.start({pushState: false});
@@ -332,7 +334,7 @@ $(document).ready(function() {
     });
     var router = new Router();
     Backbone.history.navigate(route, {trigger: true});
-    deepEqual(router.queryParams, expectedParams)
+    deepEqual(router.queryParams, expectedParams);
   });
 
   test("complex wildcard", function() {
