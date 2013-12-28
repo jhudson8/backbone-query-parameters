@@ -135,7 +135,7 @@ $(document).ready(function() {
 
       setup: function() {
         location = new Location('http://example.com');
-        Backbone.history = _.extend(new Backbone.History(), {location: location, history: hasPushState ? {} : new History(location)});
+        Backbone.history = _.extend(new Backbone.History(), {location: location, history: hasPushState ? new History(location) : {}});
         router = new Router({testing: 101});
         Backbone.history.interval = 9;
         Backbone.history.start({pushState: wantPushState});
