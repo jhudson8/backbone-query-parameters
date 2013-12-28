@@ -243,76 +243,62 @@ _.extend(Backbone.Router.prototype, {
   toFragment: function(route, queryParameters) {
     if (queryParameters) {
       if (!_.isString(queryParameters)) {
-        queryParameters = this._toQueryString(queryParameters);
+        queryParameters = toQueryString(queryParameters);
       }
       if(queryParameters) {
         route += '?' + queryParameters;
       }
     }
     return route;
-  },
-
-  /**
-   * Serialize the val hash to query parameters and return it.  Use the namePrefix to prefix all param names (for recursion)
-   */
-  _toQueryString: function(val, namePrefix) {
-    var splitChar = Backbone.Router.arrayValueSplit;
-    function encodeSplit(val) { return String(val).replace(splitChar, encodeURIComponent(splitChar)); }
-
-    if (!val) return '';
-    namePrefix = namePrefix || '';
-    var rtn = '';
-    for (var name in val) {
-      var _val = val[name];
-      if (_.isString(_val) || _.isNumber(_val) || _.isBoolean(_val) || _.isDate(_val)) {
-        // primitive type
-        _val = this._toQueryParam(_val);
-        if (_.isBoolean(_val) || _.isNumber(_val) || _.isString(_val) || _val) {
-          rtn += (rtn ? '&' : '') + this._toQueryParamName(name, namePrefix) + '=' + encodeSplit(encodeURIComponent(_val));
-        }
-      } else if (_.isArray(_val)) {
-        // arrays use Backbone.Router.arrayValueSplit separator
-        var str = '';
-        for (var i = 0; i < _val.length; i++) {
-          var param = this._toQueryParam(_val[i]);
-          if (_.isBoolean(param) || param !== null) {
-            str += splitChar + encodeSplit(param);
-          }
-        }
-        if (str) {
-          rtn += (rtn ? '&' : '') + this._toQueryParamName(name, namePrefix) + '=' + str;
-        }
-      } else {
-        // dig into hash
-        var result = this._toQueryString(_val, this._toQueryParamName(name, namePrefix, true));
-        if (result) {
-          rtn += (rtn ? '&' : '') + result;
-        }
-      }
-    }
-    return rtn;
-  },
-
-  /**
-   * return the actual parameter name
-   * @param name the parameter name
-   * @param namePrefix the prefix to the name
-   * @param createPrefix true if we're creating a name prefix, false if we're creating the name
-   */
-  _toQueryParamName: function(name, prefix, isPrefix) {
-    return (prefix + name + (isPrefix ? '.' : ''));
-  },
-
-  /**
-   * Return the string representation of the param used for the query string
-   */
-  _toQueryParam: function (param) {
-    if (_.isNull(param) || _.isUndefined(param)) {
-      return null;
-    }
-    return param;
   }
 });
+
+
+/**
+ * Serialize the val hash to query parameters and return it.  Use the namePrefix to prefix all param names (for recursion)
+ */
+function toQueryString(val, namePrefix) {
+  /*jshint eqnull:true */
+  var splitChar = Backbone.Router.arrayValueSplit;
+  function encodeSplit(val) { return String(val).replace(splitChar, encodeURIComponent(splitChar)); }
+
+  if (!val) {
+    return '';
+  }
+
+  namePrefix = namePrefix || '';
+  var rtn = [];
+  _.each(val, function(_val, name) {
+    name = namePrefix + name;
+
+    if (_.isString(_val) || _.isNumber(_val) || _.isBoolean(_val) || _.isDate(_val)) {
+      // primitive type
+      if (_val != null) {
+        rtn.push(name + '=' + encodeSplit(encodeURIComponent(_val)));
+      }
+    } else if (_.isArray(_val)) {
+      // arrays use Backbone.Router.arrayValueSplit separator
+      var str = '';
+      for (var i = 0; i < _val.length; i++) {
+        var param = _val[i];
+        if (param != null) {
+          str += splitChar + encodeSplit(param);
+        }
+      }
+      if (str) {
+        rtn.push(name + '=' + str);
+      }
+    } else {
+      // dig into hash
+      var result = toQueryString(_val, name + '.');
+      if (result) {
+        rtn.push(result);
+      }
+    }
+  });
+
+  return rtn.join('&');
+}
 
 function parseParams(value) {
   // decodeURIComponent doesn't touch '+'
