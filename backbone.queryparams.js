@@ -94,14 +94,6 @@ _.extend(Backbone.Router.prototype, {
     this.encodedSplatParts = options && options.encodedSplatParts;
   },
 
-  getFragment: function(fragment, forcePushState, excludeQueryString) {
-    fragment = _getFragment.apply(this, arguments);
-    if (excludeQueryString) {
-      fragment = fragment.replace(queryStrip, '');
-    }
-    return fragment;
-  },
-
   _routeToRegExp: function(route) {
     var splatMatch = (splatParam.exec(route) || {index: -1}),
         namedMatch = (namedParam.exec(route) || {index: -1}),
