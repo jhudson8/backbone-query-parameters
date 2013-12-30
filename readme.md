@@ -1,6 +1,6 @@
 Installation
 --------------
-Copy backbone.queryparams.js to your environment and include *after* backbone.js.  This has been updated to support backbone 0.9.9.
+Copy backbone.queryparams.js to your environment and include *after* backbone.js.
 
 Query string route syntax
 -------------------------
@@ -64,3 +64,14 @@ If you want to use this plugin with regex routes you'll need to append the query
 should be written
 
     router.route(/foo\/([^\/]+)\/([\?]{1}.*)?/, 'foo:event', callback)
+
+Supported Versions
+------------------
+
+This library supports Backbone 1.0.0 and 1.1.0. Backbone 1.1.0 users need to either include the `backbone.queryparams-1.1-shim.js` file or modify their backbone libray to remove this line from `Backbone.History.prototype.navigate`.
+
+```javascript
+      // Strip the fragment of the query and hash for matching.
+      fragment = fragment.replace(pathStripper, '');
+```
+
