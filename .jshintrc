@@ -15,7 +15,7 @@
   "plusplus": false,
   "regexp": false,
   "undef": true,
-  "unused": false,
+  "unused": true,
   "strict": false,
   "trailing": true,
   "maxparams": 6,

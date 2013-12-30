@@ -39,7 +39,7 @@ $(document).ready(function() {
 
   });
 
-  var History = function(location, href) {
+  var History = function(location) {
     this.location = location;
   };
   History.prototype.pushState = function(state, title, href) {
@@ -327,7 +327,7 @@ $(document).ready(function() {
     });
 
     test("getQueryParameters", 2, function() {
-      var router = new Backbone.Router();
+      new Backbone.Router();
       deepEqual(Backbone.history.getQueryParameters('?cmpid'), {cmpid: ""});
       deepEqual(Backbone.history.getQueryParameters('?cmpid='), {cmpid: ""});
     });
