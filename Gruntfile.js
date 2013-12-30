@@ -33,7 +33,7 @@ module.exports = function(grunt) {
         options: {
           testname: 'backbone-query-parameters',
           build: process.env.TRAVIS_JOB_ID,
-          urls: ['http://localhost:9999/test/test.html'],
+          urls: ['http://localhost:9999/test/test.html', 'http://localhost:9999/test/test-1.1.html'],
           detailedError: true,
           concurrency: 2,
           browsers: [
