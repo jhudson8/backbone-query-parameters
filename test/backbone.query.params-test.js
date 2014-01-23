@@ -290,6 +290,18 @@ $(document).ready(function() {
       equal(router.arg, 42);
     });
 
+    test("routes (optional) with named parameters", 2, function() {
+      Backbone.Router.namedParameters = true;
+      Backbone.history.navigate('optional', {trigger: true});
+      Backbone.history.checkUrl();
+      equal(router.arg, null);
+
+      Backbone.history.navigate('optional/42', {trigger: true});
+      Backbone.history.checkUrl();
+      equal(router.arg, 42);
+      Backbone.Router.namedParameters = false;
+    });
+
     test("named parameters (defined statically)", 3, function() {
       Backbone.Router.namedParameters = true;
       var route = 'search/nyc/p10?a=b';
