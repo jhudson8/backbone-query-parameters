@@ -294,11 +294,11 @@ $(document).ready(function() {
       Backbone.Router.namedParameters = true;
       Backbone.history.navigate('optional', {trigger: true});
       Backbone.history.checkUrl();
-      equal(router.arg, null);
+      equal(typeof router.arg, 'object');
 
       Backbone.history.navigate('optional/42', {trigger: true});
       Backbone.history.checkUrl();
-      equal(router.arg, 42);
+      equal(router.arg['item'], 42);
       Backbone.Router.namedParameters = false;
     });
 
