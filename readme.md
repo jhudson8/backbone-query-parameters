@@ -74,4 +74,4 @@ This library supports Backbone 1.0.0 and 1.1.0. Backbone 1.1.0 users need to eit
       // Strip the fragment of the query and hash for matching.
       fragment = fragment.replace(pathStripper, '');
 ```
-
+This library can also be used when Marionette 1.2.2 (with router/appRoutes) is used on top of Backbone.
