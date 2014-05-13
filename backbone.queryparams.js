@@ -119,7 +119,7 @@ _.extend(Backbone.Router.prototype, {
   _extractParameters: function(route, fragment) {
     var params = route.exec(fragment).slice(1),
         namedParams = {};
-    if (params.length > 0 && _.isUndefined(params[params.length - 1])) {
+    if (params.length > 0 && !params[params.length - 1]) {
       // remove potential invalid data from query params match
       params.splice(params.length - 1, 1);
     }
