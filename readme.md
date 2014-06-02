@@ -34,13 +34,13 @@ whether the route query parameters were passed.
 
 Nested query strings
 -----------------------
-* Any keys containing '.' will represent a nested structure.
+* Any keys containing '[<key>]' will represent a nested structure.
 * Any keys containing '[]' will assume an array structure.
 * Any values containing '|' will assume an array structure.
 * Non-array values can still contain '|' but it must be URI encoded (%7C).
 * A prefix of '|' will ensure an array in case there is only a single value.
 
-		#foo/abc?me.fname=Joe&me.lname=Hudson -> myRoute('abc', {'me': {'fname': 'Joe', 'lname': 'Hudson'}} )
+		#foo/abc?me[fname]=Joe&me[lname]=Hudson -> myRoute('abc', {'me': {'fname': 'Joe', 'lname': 'Hudson'}} )
 
 		#foo/abc?animals=cat|dog -> myRoute( 'abc', ['cat', 'dog'] )
 

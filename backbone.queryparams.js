@@ -24,6 +24,30 @@ var queryStringParam = /^\?(.*)/,
     trailingSlash = /\/$/;
 Backbone.Router.arrayValueSplit = '|';
 
+var deserialize = function (str, options) {
+  str = str[0] === '?' ? str.substring(1) : str;
+  var pairs = str.split(/&amp;|&/i),
+      h = {},
+      options = options || {};
+  if (!str) return h;
+  for(var i = 0; i < pairs.length; i++) {
+      var kv = pairs[i].split('=');
+      kv[0] = decodeURIComponent(kv[0]);
+      if(!options.except || options.except.indexOf(kv[0]) == -1) {
+          if((/^\w+\[\w+\]$/).test(kv[0])) {
+              var matches = kv[0].match(/^(\w+)\[(\w+)\]$/);
+              if(typeof h[matches[1]] === 'undefined') {
+                  h[matches[1]] = {};
+              }
+              h[matches[1]][matches[2]] = decodeURIComponent(kv[1]);
+          } else {
+              h[kv[0]] = decodeURIComponent(kv[1]);
+          }
+      }
+  }
+  return h;
+};
+
 _.extend(Backbone.History.prototype, {
   getFragment: function(fragment, forcePushState) {
     /*jshint eqnull:true */
@@ -54,18 +78,7 @@ _.extend(Backbone.History.prototype, {
     var match = queryString.match(queryStringParam);
     if (match) {
       queryString = match[1];
-      var rtn = {};
-      iterateQueryString(queryString, function(name, value) {
-        value = parseParams(value);
-
-        if (!rtn[name]) {
-          rtn[name] = value;
-        } else if (_.isString(rtn[name])) {
-          rtn[name] = [rtn[name], value];
-        } else {
-          rtn[name].push(value);
-        }
-      });
+      var rtn = deserialize(queryString);
       return rtn;
     } else {
       // no values
@@ -131,9 +144,7 @@ _.extend(Backbone.Router.prototype, {
       var data = {};
       if (queryString) {
         var self = this;
-        iterateQueryString(queryString, function(name, value) {
-          self._setParamValue(name, value, data);
-        });
+        data = deserialize(queryString);
       }
       params[params.length-1] = data;
       _.extend(namedParams, data);
