@@ -54,18 +54,39 @@ module.exports = function(grunt) {
           ]
         }
       }
-    }
+    },
+    closureCompiler: {
+		options: {
+			compilerFile: 'lib/compiler.jar',
+
+			checkModified: true,
+			
+			compilerOpts: {
+				compilation_level: 'SIMPLE_OPTIMIZATIONS',
+				language_in: 'ECMASCRIPT5',
+				create_source_map: 'backbone.queryparams.min.map'
+			}
+		},
+		
+		dist: {
+			src: 'backbone.queryparams.js',
+			dest: 'backbone.queryparams.min.js'
+		}
+	}
   });
 
   // Load tasks from npm
   grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-saucelabs');
+  grunt.loadNpmTasks('grunt-closure-tools');
 
   grunt.registerTask('sauce', process.env.SAUCE_USERNAME ? ['connect:server', 'saucelabs-qunit'] : []);
 
   grunt.registerTask('travis', ['sauce']);
 
+  grunt.registerTask('minify', ['closureCompiler']);
+  
   grunt.registerTask('dev', ['jshint', 'connect:keepalive']);
-  grunt.registerTask('default', ['jshint']);
+  grunt.registerTask('default', ['jshint', 'minify']);
 };
