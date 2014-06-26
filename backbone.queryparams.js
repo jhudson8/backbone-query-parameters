@@ -106,7 +106,8 @@ _.extend(Backbone.Router.prototype, {
         rtn.splatMatch = -1;
       }
     }
-    rtn.paramNames = _.map(paramNames, function(name) { return name.substring(1); });
+	// Map and remove any trailing ')' character that has been caught up in regex matching
+    rtn.paramNames = _.map(paramNames, function(name) { return name.replace(/\)$/, '').substring(1); });
     rtn.namedParameters = this.namedParameters;
 
     return rtn;
