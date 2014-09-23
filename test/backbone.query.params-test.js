@@ -1,4 +1,5 @@
 $(document).ready(function() {
+  /*global QUnit */
 
   var router = null;
   var location = null;
@@ -298,7 +299,7 @@ $(document).ready(function() {
 
       Backbone.history.navigate('optional/42', {trigger: true});
       Backbone.history.checkUrl();
-      equal(router.arg['item'], 42);
+      equal(router.arg.item, 42);
       Backbone.Router.namedParameters = false;
     });
 
@@ -382,6 +383,34 @@ $(document).ready(function() {
       equal(match[2], undefined);
     });
   }
+
+  // Sauce qunit reporter
+  var log = [];
+
+  QUnit.done(function (test_results) {
+    var tests = [];
+    for(var i = 0, len = log.length; i < len; i++) {
+      var details = log[i];
+      tests.push({
+        name: details.name,
+        result: details.result,
+        expected: details.expected,
+        actual: details.actual,
+        source: details.source
+      });
+    }
+    test_results.tests = tests;
+
+    window.global_test_results = test_results;
+  });
+  QUnit.testStart(function(testDetails){
+    QUnit.log(function(details){
+      if (!details.result) {
+        details.name = testDetails.name;
+        log.push(details);
+      }
+    });
+  });
 
   queryParams(true, true);
   queryParams(true, false);
