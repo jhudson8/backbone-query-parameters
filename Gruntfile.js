@@ -29,14 +29,36 @@ module.exports = function(grunt) {
       }
     },
     'saucelabs-qunit': {
-      all: {
+      options: {
+        testname: 'backbone-query-parameters',
+        build: process.env.TRAVIS_JOB_ID,
+        detailedError: true,
+        concurrency: 4
+      },
+      'backbone-1.0': {
         options: {
-          testname: 'backbone-query-parameters',
-          build: process.env.TRAVIS_JOB_ID,
-          urls: ['http://localhost:9999/test/test.html', 'http://localhost:9999/test/test-1.1.html'],
-          detailedError: true,
-          concurrency: 2,
+          tags: ['1.0'],
+          urls: [
+            'http://localhost:9999/test/test.html'
+          ],
           browsers: [
+            {browserName: 'chrome'},
+            {browserName: 'firefox'},
+            {browserName: 'safari'},
+            {browserName: 'opera'},
+            {browserName: 'internet explorer', version: 11, platform: 'Windows 8.1'},
+            {browserName: 'internet explorer', version: 8, platform: 'XP'}
+          ]
+        }
+      },
+      'backbone-1.1': {
+        options: {
+          tags: ['1.1'],
+          urls: [
+            'http://localhost:9999/test/test-1.1.html'
+          ],
+          browsers: [
+            // IE8 backbone core tests fail due to the long running script blocker triggering
             {browserName: 'chrome'},
             {browserName: 'firefox'},
             {browserName: 'safari'},
@@ -44,11 +66,11 @@ module.exports = function(grunt) {
             {browserName: 'internet explorer', version: 11, platform: 'Windows 8.1'},
             {browserName: 'internet explorer', version: 10, platform: 'Windows 8'},
             {browserName: 'internet explorer', version: 9, platform: 'Windows 7'},
-            {browserName: 'internet explorer', version: 8, platform: 'XP'}
           ]
         }
       }
     },
+
     closureCompiler: {
 		options: {
 			compilerFile: 'lib/compiler.jar',
@@ -75,7 +97,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-saucelabs');
   grunt.loadNpmTasks('grunt-closure-tools');
 
-  grunt.registerTask('sauce', process.env.SAUCE_USERNAME ? ['connect:server', 'saucelabs-qunit'] : []);
+  grunt.registerTask('sauce', process.env.SAUCE_USERNAME ? ['connect:server', 'saucelabs-qunit:backbone-1.0', 'saucelabs-qunit:backbone-1.1'] : []);
 
   grunt.registerTask('travis', ['sauce']);
 

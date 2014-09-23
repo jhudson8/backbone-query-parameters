@@ -284,7 +284,7 @@ $(document).ready(function() {
     test("routes (optional)", 2, function() {
       Backbone.history.navigate('optional', {trigger: true});
       Backbone.history.checkUrl();
-      equal(router.arg, null);
+      ok(!router.arg);
 
       Backbone.history.navigate('optional/42', {trigger: true});
       Backbone.history.checkUrl();
@@ -380,7 +380,7 @@ $(document).ready(function() {
 
       match = regex.exec('search/foo');
       equal(match[1], 'foo');
-      equal(match[2], undefined);
+      ok(!match[2]);
     });
   }
 
