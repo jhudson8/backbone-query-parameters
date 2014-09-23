@@ -2,7 +2,16 @@
 
 ## Development
 
-[Commits](https://github.com/jhudson8/backbone-query-parameters/compare/v0.3.1...master)
+[Commits](https://github.com/jhudson8/backbone-query-parameters/compare/v0.4.0...master)
+
+## v0.4.0 - September 23rd, 2014
+- Adding minification task using Google Closure Compiler to Gruntfile.js Adding Google Closure Compiler binary. Minified src & src map - 27ff3d7
+- Check last param on false value instead of isUndefined - e5bd919
+- Initial fix for optional named params - f05b6e7
+- Added breaking test for named parameters with optional route parameters - 8f23eca
+- Update module wrapper to work in Node and be more in line with UMDJS - a79ff63
+
+[Commits](https://github.com/jhudson8/backbone-query-parameters/compare/v0.3.1...v0.4.0)
 
 ## v0.3.1 - September 23rd, 2014
 - [#95](https://github.com/jhudson8/backbone-query-parameters/pull/85) - Make backbone 1.1 shim amd compatible with conditional define.
