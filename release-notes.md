@@ -2,7 +2,12 @@
 
 ## Development
 
-[Commits](https://github.com/jhudson8/backbone-query-parameters/compare/v0.3.0...master)
+[Commits](https://github.com/jhudson8/backbone-query-parameters/compare/v0.3.1...master)
+
+## v0.3.1 - September 23rd, 2014
+- [#95](https://github.com/jhudson8/backbone-query-parameters/pull/85) - Make backbone 1.1 shim amd compatible with conditional define.
+
+[Commits](https://github.com/jhudson8/backbone-query-parameters/compare/v0.3.0...v0.3.1)
 
 ## v0.3.0 - December 30th, 2013
 - [#71](https://github.com/jhudson8/backbone-query-parameters/issues/71) - router.getFragment() fails ([@finpingvin](https://api.github.com/users/finpingvin))
