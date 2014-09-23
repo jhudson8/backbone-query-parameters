@@ -26,7 +26,7 @@
     "grunt": "~0.4.2",
     "grunt-contrib-jshint": "~0.8.0",
     "grunt-contrib-connect": "~0.5.0",
-    "grunt-saucelabs": "~4.1.2",
+    "grunt-saucelabs": "8.x",
     "grunt-closure-tools": "~0.9.6"
   }
 }
