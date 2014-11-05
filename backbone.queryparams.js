@@ -255,17 +255,7 @@ function toQueryString(val, namePrefix) {
         rtn.push(name + '=' + encodeSplit(encodeURIComponent(_val)));
       }
     } else if (_.isArray(_val)) {
-      // arrays use Backbone.Router.arrayValueSplit separator
-      var str = '';
-      for (var i = 0; i < _val.length; i++) {
-        var param = _val[i];
-        if (param != null) {
-          str += splitChar + encodeSplit(param);
-        }
-      }
-      if (str) {
-        rtn.push(name + '=' + str);
-      }
+	rtn.push(name + '=' + encodeSplit(encodeURIComponent(_val[i])));
     } else {
       // dig into hash
       var result = toQueryString(_val, name + '.');
