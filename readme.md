@@ -2,6 +2,8 @@ Installation
 --------------
 Copy backbone.queryparams.js to your environment and include *after* backbone.js.
 
+note: Backbone now supports minimal query parameters as of 1.1.1: [http://backbonejs.org/#changelog](http://backbonejs.org/#changelog)
+
 Query string route syntax
 -------------------------
 Any route except those ending with a wildcard will automatically accept additional content using the '?' separator. This content is a set of key value pairs using '&' as the pair separator and '=' as the key/value separator - just like the URL query string syntax.
