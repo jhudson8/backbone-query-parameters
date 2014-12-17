@@ -118,6 +118,9 @@ _.extend(Backbone.Router.prototype, {
    * extracted parameters.
    */
   _extractParameters: function(route, fragment) {
+    // Replace all occurances of </ in fragment to prevent XSS
+    fragment = fragment.replace(/<\//g, "<\\/");
+
     var params = route.exec(fragment).slice(1),
         namedParams = {};
     if (params.length > 0 && !params[params.length - 1]) {
