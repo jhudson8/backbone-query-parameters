@@ -260,7 +260,7 @@ function toQueryString(val, namePrefix) {
       for (var i = 0; i < _val.length; i++) {
         var param = _val[i];
         if (param != null) {
-          str += splitChar + encodeSplit(param);
+          str += splitChar + encodeSplit(encodeURIComponent(param));
         }
       }
       if (str) {
