@@ -27,10 +27,13 @@ Backbone.Router.arrayValueSplit = '|';
 _.extend(Backbone.History.prototype, {
   getFragment: function(fragment, forcePushState) {
     /*jshint eqnull:true */
+    var root = '';
     if (fragment == null) {
       if (this._hasPushState || !this._wantsHashChange || forcePushState) {
         fragment = this.location.pathname;
-        var root = this.root.replace(trailingSlash, '');
+        if (this.root && this.root.length) {
+          root = this.root.replace(trailingSlash, '');
+        }
         var search = this.location.search;
         if (!fragment.indexOf(root)) {
           fragment = fragment.substr(root.length);
