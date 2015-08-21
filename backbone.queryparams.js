@@ -29,7 +29,7 @@ _.extend(Backbone.History.prototype, {
     /*jshint eqnull:true */
     var root = '';
     if (fragment == null) {
-      if (this._hasPushState || !this._wantsHashChange || forcePushState) {
+      if (this._wantsPushState || !this._wantsHashChange || forcePushState) {
         fragment = this.location.pathname;
         if (this.root && this.root.length) {
           root = this.root.replace(trailingSlash, '');
