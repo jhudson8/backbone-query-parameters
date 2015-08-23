@@ -43,7 +43,7 @@ module.exports = function(grunt) {
           ],
           browsers: [
             {browserName: 'chrome'},
-            {browserName: 'firefox'},
+            {browserName: 'firefox', platform: 'Linux'},
             {browserName: 'safari'},
             {browserName: 'opera'},
             {browserName: 'internet explorer', version: 11, platform: 'Windows 8.1'},
