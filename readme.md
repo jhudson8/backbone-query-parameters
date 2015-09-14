@@ -1,3 +1,5 @@
+***I am no longer maintining this project.  If anyone is interested in taking ownership if this, let me know***
+
 Installation
 --------------
 Copy backbone.queryparams.js to your environment and include *after* backbone.js.
