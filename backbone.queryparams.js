@@ -176,7 +176,7 @@ _.extend(Backbone.Router.prototype, {
     var parts = key.split('.');
     var _data = data;
     for (var i=0; i<parts.length; i++) {
-      var part = parts[i];
+      var part = decodeURIComponent(parts[i]);
       if (i === parts.length-1) {
         // set the value
         _data[part] = this._decodeParamValue(value, _data[part]);
